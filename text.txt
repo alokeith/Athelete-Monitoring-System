@@ -1,1 +1,4 @@
 npx tailwindcss -i input.css -o output.css --watch
+
+SELECT personnel.person_id, personnel.person_name, event.event_id, event.event_name FROM personnel INNER JOIN event ON personnel.event_id = event.event_id WHERE personnel.person_status = 1
+
