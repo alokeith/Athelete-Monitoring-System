@@ -25,12 +25,13 @@ $conn->close();
     <meta name="description" content="" />
     <title>AMS</title>
     <link href="style.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/df92423fc4.js" crossorigin="anonymous"></script>
 
 </head>
 
 <body>
     <div class="bg-gray-300 drop-shadow">
-        <ul class="flex border-b border-gray-100 drop-shadow">
+        <ul class="flex border-b bg-gray-300 drop-shadow">
             <li class="flex-1 hover:bg-gray-200 cursor-pointer">
                 <a class="relative block p-4" onclick="changeTab('in-out')">
                     <span id="in-out" class="absolute inset-x-0 -bottom-px h-1 w-full bg-gray-800"></span>
@@ -118,6 +119,28 @@ $conn->close();
             element.classList.toggle("hidden")
             // console.log(element.className);
         }
+
+        function enableScan() {
+            var input = document.getElementById("qr-input");
+            var btn = document.getElementById("btn-qr");
+            var icon = document.getElementById("icon-qr");
+            if (input.disabled) {
+                btn.title = "Cancel Scanning Mode";
+                btn.className = "fixed z-90 bottom-28 right-5 bg-red-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-red-700 hover:drop-shadow-2xl hover:animate-bounce duration-300";
+                icon.className = "fa-solid fa-xmark";
+            } else {
+                btn.title = "QR Scanning Mode";
+                btn.className = "fixed z-90 bottom-28 right-5 bg-green-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-green-700 hover:drop-shadow-2xl hover:animate-bounce duration-300"
+                icon.className = "fa-sharp fa-solid fa-qrcode";
+            }
+            input.disabled = !input.disabled;
+            input.focus();
+        }
+
+        function scanQR() {
+            var input = document.getElementById("qr-input");
+            console.log(input.value)
+        }
     </script>
 
     <div class="h-[82vh] pb-4">
@@ -131,382 +154,65 @@ $conn->close();
                     </div>
                 </div>
                 <div class="h-full overflow-x-hidden mt-2 mx-2 scroll-style pb-20">
-                    <!-- BBS -->
-                    <div class="flex flex-col">
-                        <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                            <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
-                                <div class="overflow-hidden rounded-md shadow-md">
-                                    <table class="min-w-full text-center border-r-2 border-white">
-                                        <thead class="border-b bg-gray-800 cursor-pointer" onclick="toggleTable('basketball-b-sec-in')">
-                                            <tr>
-                                                <th scope="col" class="w-1/2 text-xl font-bold text-white px-6 py-4">
-                                                    BASKETBALL BOYS SECONDARY
 
-                                                </th>
-                                                <th scope="col" class="w-1/2 text-sm font-medium text-white px-6 py-4">
-                                                    CONTACT NO: 09123456789
-                                                </th>
-                                            </tr>
-                                        </thead class="border-b">
-                                        <tbody id="basketball-b-sec-in" class="fadeAnim hidden">
-                                            <?php
-                                            include './dbh.inc.php';
-                                            $sql = "SELECT * FROM personnel WHERE event_id = 1 AND person_status = 1";
-                                            $result = $conn->query($sql);
+                    <?php
+                    include './dbh.inc.php';
+                    $sql = "SELECT event.event_id, event.event_name, personnel.person_status FROM personnel INNER JOIN event ON personnel.event_id = event.event_id WHERE personnel.person_status = 1 ORDER BY event.event_name";
+                    $result = $conn->query($sql);
 
 
-                                            if ($result->num_rows > 0) {
-                                                while ($row = $result->fetch_assoc()) {
-                                                    echo '
-                                                <tr class="border-b even:bg-gray-200 odd:bg-gray-100">
-                                                    <td class="px-6 py-3 whitespace-nowrap text-sm font-medium text-gray-900">' . $row["person_id"] . '
-                                                    </td>
-                                                    <td class="text-sm text-gray-900 font-light px-6 py-3 whitespace-nowrap">
-                                                        ' . $row["person_name"] . '
-                                                    </td>
-                                                </tr class="bg-white border-b">';
-                                                }
-                                            }
-                                            $conn->close();
-                                            ?>
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            $event_id = $row["event_id"];
+                            $event_name = $row["event_name"];
+                            $person_status = $row["person_status"];
 
+                            echo '
+                                            <div class="flex flex-col">
+                                                <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+                                                    <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
+                                                        <div class="overflow-hidden rounded-md shadow-md">
+                                                            <table class="min-w-full text-center border-r-2 border-white">
+                                                                <thead class="border-b bg-gray-800 cursor-pointer" onclick="toggleTable(\'' . "in-" . $event_id . '\')">
+                                                                    <tr>
+                                                                        <th scope="col" class="w-1/2 text-xl font-bold text-white px-6 py-4 uppercase" style="text-transform: uppercase">
+                                                                            ' . $event_name . '
+                                                                        </th>
+                                                                        <th scope="col" class="w-1/2 text-sm font-medium text-white px-6 py-4">
+                                                                            CONTACT NO: 09123456789
+                                                                        </th>
+                                                                    </tr>
+                                                                </thead class="border-b">
+                                                                <tbody id="' . "in-" . $event_id . '" class="fadeAnim hidden">';
 
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /BBS -->
+                            $sql2 = "SELECT * FROM personnel WHERE event_id = " . $event_id . " AND person_status = 1";
+                            $result2 = $conn->query($sql2);
 
-                    <!-- VBS -->
-                    <div class="flex flex-col">
-                        <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                            <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
-                                <div class="overflow-hidden rounded-md shadow-md">
-                                    <table class="min-w-full text-center border-r-2 border-white">
-                                        <thead class="border-b bg-gray-800 cursor-pointer" onclick="toggleTable('volleyball-b-sec-in')">
-                                            <tr>
-                                                <th scope="col" class="w-1/2 text-xl font-bold text-white px-6 py-4">
-                                                    VOLLEYBALL BOYS SECONDARY
+                            if ($result2->num_rows > 0) {
+                                while ($row = $result2->fetch_assoc()) {
+                                    echo '
+                                                    <tr class="border-b even:bg-gray-200 odd:bg-gray-100">
+                                                        <td class="px-6 py-3 whitespace-nowrap text-sm font-medium text-gray-900">' . $row["person_id"] . '
+                                                        </td>
+                                                        <td class="text-sm text-gray-900 font-light px-6 py-3 whitespace-nowrap">
+                                                            ' . $row["person_name"] . '
+                                                        </td>
+                                                    </tr class="bg-white border-b">';
+                                }
+                            }
 
-                                                </th>
-                                                <th scope="col" class="w-1/2 text-sm font-medium text-white px-6 py-4">
-                                                    CONTACT NO: 09123456789
-                                                </th>
-                                            </tr>
-                                        </thead class="border-b">
-                                        <tbody id="volleyball-b-sec-in" class="fadeAnim hidden">
-                                            <?php
-                                            include './dbh.inc.php';
-                                            $sql = "SELECT * FROM personnel WHERE event_id = 2 AND person_status = 1";
-                                            $result = $conn->query($sql);
+                            echo ' </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ';
+                        }
+                    }
+                    $conn->close();
+                    ?>
 
-
-                                            if ($result->num_rows > 0) {
-                                                while ($row = $result->fetch_assoc()) {
-                                                    echo '
-                                                <tr class="border-b even:bg-gray-200 odd:bg-gray-100">
-                                                    <td class="px-6 py-3 whitespace-nowrap text-sm font-medium text-gray-900">' . $row["person_id"] . '
-                                                    </td>
-                                                    <td class="text-sm text-gray-900 font-light px-6 py-3 whitespace-nowrap">
-                                                        ' . $row["person_name"] . '
-                                                    </td>
-                                                </tr class="bg-white border-b">';
-                                                }
-                                            }
-                                            $conn->close();
-                                            ?>
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /VBS -->
-
-                    <!-- BGS -->
-                    <div class="flex flex-col">
-                        <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                            <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
-                                <div class="overflow-hidden rounded-md  shadow-md">
-                                    <table class="min-w-full text-center border-r-2 border-white">
-                                        <thead class="border-b bg-gray-800 cursor-pointer" onclick="toggleTable('basketball-g-sec-in')">
-                                            <tr>
-                                                <th scope="col" class="w-1/2 text-xl font-bold text-white px-6 py-4">
-                                                    BASKETBALL GIRLS SECONDARY
-
-                                                </th>
-                                                <th scope="col" class="w-1/2 text-sm font-medium text-white px-6 py-4">
-                                                    CONTACT NO: 09123456789
-                                                </th>
-                                            </tr>
-                                        </thead class="border-b">
-                                        <tbody id="basketball-g-sec-in" class="fadeAnim hidden">
-                                            <?php
-                                            include './dbh.inc.php';
-                                            $sql = "SELECT * FROM personnel WHERE event_id = 3 AND person_status = 1";
-                                            $result = $conn->query($sql);
-
-
-                                            if ($result->num_rows > 0) {
-                                                while ($row = $result->fetch_assoc()) {
-                                                    echo '
-                                                <tr class="border-b even:bg-gray-200 odd:bg-gray-100">
-                                                    <td class="px-6 py-3 whitespace-nowrap text-sm font-medium text-gray-900">' . $row["person_id"] . '
-                                                    </td>
-                                                    <td class="text-sm text-gray-900 font-light px-6 py-3 whitespace-nowrap">
-                                                        ' . $row["person_name"] . '
-                                                    </td>
-                                                </tr class="bg-white border-b">';
-                                                }
-                                            }
-                                            $conn->close();
-                                            ?>
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /BGS -->
-
-                    <!-- VGS -->
-                    <div class="flex flex-col">
-                        <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                            <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
-                                <div class="overflow-hidden rounded-md  shadow-md">
-                                    <table class="min-w-full text-center border-r-2 border-white">
-                                        <thead class="border-b bg-gray-800 cursor-pointer" onclick="toggleTable('volleyball-g-sec-in')">
-                                            <tr>
-                                                <th scope="col" class="w-1/2 text-xl font-bold text-white px-6 py-4">
-                                                    VOLLEYBALL GIRLS SECONDARY
-
-                                                </th>
-                                                <th scope="col" class="w-1/2 text-sm font-medium text-white px-6 py-4">
-                                                    CONTACT NO: 09123456789
-                                                </th>
-                                            </tr>
-                                        </thead class="border-b">
-                                        <tbody id="volleyball-g-sec-in" class="fadeAnim hidden">
-                                            <?php
-                                            include './dbh.inc.php';
-                                            $sql = "SELECT * FROM personnel WHERE event_id = 4 AND person_status = 1";
-                                            $result = $conn->query($sql);
-
-
-                                            if ($result->num_rows > 0) {
-                                                while ($row = $result->fetch_assoc()) {
-                                                    echo '
-                                                <tr class="border-b even:bg-gray-200 odd:bg-gray-100">
-                                                    <td class="px-6 py-3 whitespace-nowrap text-sm font-medium text-gray-900">' . $row["person_id"] . '
-                                                    </td>
-                                                    <td class="text-sm text-gray-900 font-light px-6 py-3 whitespace-nowrap">
-                                                        ' . $row["person_name"] . '
-                                                    </td>
-                                                </tr class="bg-white border-b">';
-                                                }
-                                            }
-                                            $conn->close();
-                                            ?>
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /VGS -->
-
-                    <!-- BBE -->
-                    <div class="flex flex-col">
-                        <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                            <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
-                                <div class="overflow-hidden rounded-md  shadow-md">
-                                    <table class="min-w-full text-center border-r-2 border-white">
-                                        <thead class="border-b bg-gray-800 cursor-pointer" onclick="toggleTable('basketball-b-elem-in')">
-                                            <tr>
-                                                <th scope="col" class="w-1/2 text-xl font-bold text-white px-6 py-4">
-                                                    BASKETBALL BOYS ELEMENTARY
-
-                                                </th>
-                                                <th scope="col" class="w-1/2 text-sm font-medium text-white px-6 py-4">
-                                                    CONTACT NO: 09123456789
-                                                </th>
-                                            </tr>
-                                        </thead class="border-b">
-                                        <tbody id="basketball-b-elem-in" class="fadeAnim hidden">
-                                            <?php
-                                            include './dbh.inc.php';
-                                            $sql = "SELECT * FROM personnel WHERE event_id = 5 AND person_status = 1";
-                                            $result = $conn->query($sql);
-
-
-                                            if ($result->num_rows > 0) {
-                                                while ($row = $result->fetch_assoc()) {
-                                                    echo '
-                                                <tr class="border-b even:bg-gray-200 odd:bg-gray-100">
-                                                    <td class="px-6 py-3 whitespace-nowrap text-sm font-medium text-gray-900">' . $row["person_id"] . '
-                                                    </td>
-                                                    <td class="text-sm text-gray-900 font-light px-6 py-3 whitespace-nowrap">
-                                                        ' . $row["person_name"] . '
-                                                    </td>
-                                                </tr class="bg-white border-b">';
-                                                }
-                                            }
-                                            $conn->close();
-                                            ?>
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /BBE -->
-
-                    <!-- VBE -->
-                    <div class="flex flex-col">
-                        <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                            <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
-                                <div class="overflow-hidden rounded-md  shadow-md">
-                                    <table class="min-w-full text-center border-r-2 border-white">
-                                        <thead class="border-b bg-gray-800 cursor-pointer" onclick="toggleTable('volleyball-b-elem-in')">
-                                            <tr>
-                                                <th scope="col" class="w-1/2 text-xl font-bold text-white px-6 py-4">
-                                                    VOLLEYBALL BOYS ELEMENTARY
-
-                                                </th>
-                                                <th scope="col" class="w-1/2 text-sm font-medium text-white px-6 py-4">
-                                                    CONTACT NO: 09123456789
-                                                </th>
-                                            </tr>
-                                        </thead class="border-b">
-                                        <tbody id="volleyball-b-elem-in" class="fadeAnim hidden">
-                                            <?php
-                                            include './dbh.inc.php';
-                                            $sql = "SELECT * FROM personnel WHERE event_id = 6 AND person_status = 1";
-                                            $result = $conn->query($sql);
-
-
-                                            if ($result->num_rows > 0) {
-                                                while ($row = $result->fetch_assoc()) {
-                                                    echo '
-                                                <tr class="border-b even:bg-gray-200 odd:bg-gray-100">
-                                                    <td class="px-6 py-3 whitespace-nowrap text-sm font-medium text-gray-900">' . $row["person_id"] . '
-                                                    </td>
-                                                    <td class="text-sm text-gray-900 font-light px-6 py-3 whitespace-nowrap">
-                                                        ' . $row["person_name"] . '
-                                                    </td>
-                                                </tr class="bg-white border-b">';
-                                                }
-                                            }
-                                            $conn->close();
-                                            ?>
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /VBE -->
-
-                    <!-- CBE -->
-                    <div class="flex flex-col">
-                        <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                            <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
-                                <div class="overflow-hidden rounded-md  shadow-md">
-                                    <table class="min-w-full text-center border-r-2 border-white">
-                                        <thead class="border-b bg-gray-800 cursor-pointer" onclick="toggleTable('chess-b-elem-in')">
-                                            <tr>
-                                                <th scope="col" class="w-1/2 text-xl font-bold text-white px-6 py-4">
-                                                    CHESS BOYS ELEMENTARY
-
-                                                </th>
-                                                <th scope="col" class="w-1/2 text-sm font-medium text-white px-6 py-4">
-                                                    CONTACT NO: 09123456789
-                                                </th>
-                                            </tr>
-                                        </thead class="border-b">
-                                        <tbody id="chess-b-elem-in" class="fadeAnim hidden">
-                                            <?php
-                                            include './dbh.inc.php';
-                                            $sql = "SELECT * FROM personnel WHERE event_id = 7 AND person_status = 1";
-                                            $result = $conn->query($sql);
-
-
-                                            if ($result->num_rows > 0) {
-                                                while ($row = $result->fetch_assoc()) {
-                                                    echo '
-                                                <tr class="border-b even:bg-gray-200 odd:bg-gray-100">
-                                                    <td class="px-6 py-3 whitespace-nowrap text-sm font-medium text-gray-900">' . $row["person_id"] . '
-                                                    </td>
-                                                    <td class="text-sm text-gray-900 font-light px-6 py-3 whitespace-nowrap">
-                                                        ' . $row["person_name"] . '
-                                                    </td>
-                                                </tr class="bg-white border-b">';
-                                                }
-                                            }
-                                            $conn->close();
-                                            ?>
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /CBE -->
-
-                    <!-- CGE -->
-                    <div class="flex flex-col">
-                        <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                            <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
-                                <div class="overflow-hidden rounded-md  shadow-md">
-                                    <table class="min-w-full text-center border-r-2 border-white">
-                                        <thead class="border-b bg-gray-800 cursor-pointer" onclick="toggleTable('chess-g-elem-in')">
-                                            <tr>
-                                                <th scope="col" class="w-1/2 text-xl font-bold text-white px-6 py-4">
-                                                    CHESS GIRLS ELEMENTARY
-
-                                                </th>
-                                                <th scope="col" class="w-1/2 text-sm font-medium text-white px-6 py-4">
-                                                    CONTACT NO: 09123456789
-                                                </th>
-                                            </tr>
-                                        </thead class="border-b">
-                                        <tbody id="chess-g-elem-in" class="fadeAnim hidden">
-                                            <?php
-                                            include './dbh.inc.php';
-                                            $sql = "SELECT * FROM personnel WHERE event_id = 8 AND person_status = 1";
-                                            $result = $conn->query($sql);
-
-
-                                            if ($result->num_rows > 0) {
-                                                while ($row = $result->fetch_assoc()) {
-                                                    echo '
-                                                <tr class="border-b even:bg-gray-200 odd:bg-gray-100">
-                                                    <td class="px-6 py-3 whitespace-nowrap text-sm font-medium text-gray-900">' . $row["person_id"] . '
-                                                    </td>
-                                                    <td class="text-sm text-gray-900 font-light px-6 py-3 whitespace-nowrap">
-                                                        ' . $row["person_name"] . '
-                                                    </td>
-                                                </tr class="bg-white border-b">';
-                                                }
-                                            }
-                                            $conn->close();
-                                            ?>
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /CGE -->
 
                 </div>
             </div>
@@ -583,11 +289,11 @@ $conn->close();
             </div>
         </div>
 
+
         <?php
         include './Components/meal.php';
         include './Components/preferences.php';
         ?>
-
 
 
         <div class="absolute bottom-0 flex justify-center items-center w-full h-20 border shadow-lg">
@@ -595,7 +301,13 @@ $conn->close();
                 <h1 class="text-2xl font-bold">Total Personnel: <?php echo $total_person ?></h1>
             </div>
         </div>
-
+        <input id="qr-input" class="fixed bg-green-300 text-center" type="text" disabled oninput="scanQR()">
+        <button id="btn-qr" title="QR Scanning Mode" class="fixed z-90 bottom-28 right-5 bg-green-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-green-700 hover:drop-shadow-2xl hover:animate-bounce duration-300" onclick="enableScan()">
+            <i id="icon-qr" class="fa-sharp fa-solid fa-qrcode"></i>
+        </button>
+        <button id="btn-add" title="Add A Personnel" class="fixed z-90 bottom-6 right-5 bg-blue-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-blue-700 hover:drop-shadow-2xl hover:animate-bounce duration-300">
+            <i id="icon-add" class="fa-solid fa-user-plus"></i>
+        </button>
     </div>
 </body>
 
