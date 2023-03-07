@@ -128,6 +128,7 @@ $conn->close();
                 btn.title = "Cancel Scanning Mode";
                 btn.className = "fixed z-90 bottom-28 right-5 bg-red-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-red-700 hover:drop-shadow-2xl hover:animate-bounce duration-300";
                 icon.className = "fa-solid fa-xmark";
+                input
             } else {
                 btn.title = "QR Scanning Mode";
                 btn.className = "fixed z-90 bottom-28 right-5 bg-green-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-green-700 hover:drop-shadow-2xl hover:animate-bounce duration-300"
@@ -135,11 +136,18 @@ $conn->close();
             }
             input.disabled = !input.disabled;
             input.focus();
+            input.value = "";
         }
 
-        function scanQR() {
-            var input = document.getElementById("qr-input");
-            console.log(input.value)
+        function scanQR(event) {
+            const form = document.querySelector('#scan-form');
+            form.submit();
+            event.preventDefault();
+        }
+
+        function keepFocus(event) {
+            event.preventDefault();
+            document.getElementById("qr-input").focus();
         }
     </script>
 
@@ -289,26 +297,44 @@ $conn->close();
             </div>
         </div>
 
+        <div class="absolute bottom-0 flex justify-center items-center w-full h-20 border shadow-lg">
+            <div id="person-counts" class="flex items-center content-center justify-evenly mx-1 overflow-x-hidden bg-gray-800 text-white h-16 rounded-lg w-11/12 drop-shadow-2xl">
+                <h1 class="text-2xl font-bold">Total Personnel: <?php echo $total_person ?></h1>
+            </div>
+        </div>
+
+        <form id="scan-form" method="POST" action="">
+            <input id="qr-input" name="scan" class="fixed bg-green-300 text-center" type="text" disabled oninput="scanQR(event)" onblur="keepFocus(event)">
+        </form>
+
+
+
+        <?php
+
+        if (isset($_POST["scan"])) {
+            $scan = $_POST["scan"];
+            require_once './dbh.inc.php';
+
+            echo '
+            <span class="w-full bg-red-300 fixed -mt-8">' . $scan . '</span>
+            <div id="postData"></div>';
+        }
+        ?>
+
+        <button id="btn-qr" title="QR Scanning Mode" class="fixed z-90 bottom-28 right-4 bg-green-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-green-700 hover:drop-shadow-2xl hover:animate-bounce duration-300" onclick="enableScan()">
+            <i id="icon-qr" class="fa-sharp fa-solid fa-qrcode"></i>
+        </button>
+        <button id="btn-add" title="Add A Personnel" class="fixed z-90 bottom-6 right-4 bg-blue-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-blue-700 hover:drop-shadow-2xl hover:animate-bounce duration-300">
+            <i id="icon-add" class="fa-solid fa-user-plus"></i>
+        </button>
 
         <?php
         include './Components/meal.php';
         include './Components/preferences.php';
         ?>
 
-
-        <div class="absolute bottom-0 flex justify-center items-center w-full h-20 border shadow-lg">
-            <div id="person-counts" class="flex items-center content-center justify-evenly mx-1 overflow-x-hidden bg-gray-800 text-white h-16 rounded-lg w-11/12 drop-shadow-2xl">
-                <h1 class="text-2xl font-bold">Total Personnel: <?php echo $total_person ?></h1>
-            </div>
-        </div>
-        <input id="qr-input" class="fixed bg-green-300 text-center" type="text" disabled oninput="scanQR()">
-        <button id="btn-qr" title="QR Scanning Mode" class="fixed z-90 bottom-28 right-5 bg-green-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-green-700 hover:drop-shadow-2xl hover:animate-bounce duration-300" onclick="enableScan()">
-            <i id="icon-qr" class="fa-sharp fa-solid fa-qrcode"></i>
-        </button>
-        <button id="btn-add" title="Add A Personnel" class="fixed z-90 bottom-6 right-5 bg-blue-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-blue-700 hover:drop-shadow-2xl hover:animate-bounce duration-300">
-            <i id="icon-add" class="fa-solid fa-user-plus"></i>
-        </button>
     </div>
+
 </body>
 
 </html>
