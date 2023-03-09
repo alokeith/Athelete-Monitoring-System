@@ -2,6 +2,8 @@
 <?php
 include './dbh.inc.php';
 
+session_start();
+
 $sqlIn = "SELECT COUNT(*) as inside FROM personnel WHERE person_status = 1";
 $resIn = mysqli_query($conn, $sqlIn);
 $dataIn = mysqli_fetch_assoc($resIn);
@@ -142,7 +144,7 @@ $conn->close();
         function scanQR(event) {
             const form = document.querySelector('#scan-form');
             form.submit();
-            event.preventDefault();
+            // event.preventDefault();
         }
 
         function keepFocus(event) {
@@ -151,7 +153,7 @@ $conn->close();
         }
     </script>
 
-    <div class="h-[82vh] pb-4">
+    <div class="h-[84vh] pb-4">
         <div id="in-out-table" class="flex justify-evenly mx-2 mt-2 overflow-hidden h-full">
             <!-- INSIDE -->
             <div class="w-1/2 border-r-2 border-white">
@@ -161,11 +163,10 @@ $conn->close();
                         <h1 class="float-left text-6xl text-center"><?php echo $person_inside ?></h1>
                     </div>
                 </div>
-                <div class="h-full overflow-x-hidden mt-2 mx-2 scroll-style pb-20">
-
+                <div class="h-full overflow-x-hidden mt-2 mr-1 scroll-style pb-20">
                     <?php
                     include './dbh.inc.php';
-                    $sql = "SELECT event.event_id, event.event_name, personnel.person_status FROM personnel INNER JOIN event ON personnel.event_id = event.event_id WHERE personnel.person_status = 1 ORDER BY event.event_name";
+                    $sql = "SELECT DISTINCT event.event_id, event.event_name FROM personnel INNER JOIN event ON personnel.event_id = event.event_id WHERE personnel.person_status = 1 ORDER BY event.event_name";
                     $result = $conn->query($sql);
 
 
@@ -173,7 +174,6 @@ $conn->close();
                         while ($row = $result->fetch_assoc()) {
                             $event_id = $row["event_id"];
                             $event_name = $row["event_name"];
-                            $person_status = $row["person_status"];
 
                             echo '
                                             <div class="flex flex-col">
@@ -225,7 +225,6 @@ $conn->close();
                 </div>
             </div>
 
-
             <!-- OUTSIDE -->
             <div class="w-1/2 border-r-2 border-white ">
                 <div class="flex h-auto justify-evenly items-center font-bold">
@@ -234,11 +233,11 @@ $conn->close();
                         <h1 class="float-left text-6xl text-center"><?php echo $person_outside; ?></h1>
                     </div>
                 </div>
-                <div class="h-full overflow-x-hidden mt-2 mx-2 scroll-style pb-20">
+                <div class="h-full overflow-x-hidden mt-2 ml-1 scroll-style pb-20">
 
                     <?php
                     include './dbh.inc.php';
-                    $sql = "SELECT event.event_id, event.event_name FROM personnel INNER JOIN event ON personnel.event_id = event.event_id WHERE personnel.person_status = 0";
+                    $sql = "SELECT DISTINCT event.event_id, event.event_name FROM personnel INNER JOIN event ON personnel.event_id = event.event_id WHERE personnel.person_status = 0 ORDER BY event.event_name";
                     $result = $conn->query($sql);
 
 
@@ -248,22 +247,22 @@ $conn->close();
                             $event_name = $row["event_name"];
 
                             echo '
-                                <div class="flex flex-col">
-                                    <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                                        <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
-                                            <div class="overflow-hidden rounded-md shadow-md">
-                                                <table class="min-w-full text-center border-r-2 border-white">
-                                                    <thead class="border-b bg-gray-800 cursor-pointer" onclick="toggleTable(' . $event_id  . ')">
-                                                        <tr>
-                                                            <th scope="col" class="w-1/2 text-xl font-bold text-white px-6 py-4 uppercase" style="text-transform: uppercase">
-                                                                ' . $event_name . '
-                                                            </th>
-                                                            <th scope="col" class="w-1/2 text-sm font-medium text-white px-6 py-4">
-                                                                CONTACT NO: 09123456789
-                                                            </th>
-                                                        </tr>
-                                                    </thead class="border-b">
-                                                    <tbody id="' . $event_id . '" class="fadeAnim hidden">';
+                                    <div class="flex flex-col">
+                                        <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+                                            <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
+                                                <div class="overflow-hidden rounded-md shadow-md">
+                                                    <table class="min-w-full text-center border-r-2 border-white">
+                                                        <thead class="border-b bg-gray-800 cursor-pointer" onclick="toggleTable(\'' . "out-" . $event_id . '\')">
+                                                            <tr>
+                                                                <th scope="col" class="w-1/2 text-xl font-bold text-white px-6 py-4 uppercase" style="text-transform: uppercase">
+                                                                    ' . $event_name . '
+                                                                </th>
+                                                                <th scope="col" class="w-1/2 text-sm font-medium text-white px-6 py-4">
+                                                                    CONTACT NO: 09123456789
+                                                                </th>
+                                                            </tr>
+                                                        </thead class="border-b">
+                                                        <tbody id="' . "out-" . $event_id . '" class="fadeAnim hidden">';
 
                             $sql2 = "SELECT * FROM personnel WHERE event_id = " . $event_id . " AND person_status = 0";
                             $result2 = $conn->query($sql2);
@@ -271,23 +270,23 @@ $conn->close();
                             if ($result2->num_rows > 0) {
                                 while ($row = $result2->fetch_assoc()) {
                                     echo '
-                                        <tr class="border-b even:bg-gray-200 odd:bg-gray-100">
-                                            <td class="px-6 py-3 whitespace-nowrap text-sm font-medium text-gray-900">' . $row["person_id"] . '
-                                            </td>
-                                            <td class="text-sm text-gray-900 font-light px-6 py-3 whitespace-nowrap">
-                                                ' . $row["person_name"] . '
-                                            </td>
-                                        </tr class="bg-white border-b">';
+                                            <tr class="border-b even:bg-gray-200 odd:bg-gray-100">
+                                                <td class="px-6 py-3 whitespace-nowrap text-sm font-medium text-gray-900">' . $row["person_id"] . '
+                                                </td>
+                                                <td class="text-sm text-gray-900 font-light px-6 py-3 whitespace-nowrap">
+                                                    ' . $row["person_name"] . '
+                                                </td>
+                                            </tr class="bg-white border-b">';
                                 }
                             }
 
                             echo ' </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            ';
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ';
                         }
                     }
                     $conn->close();
@@ -295,38 +294,57 @@ $conn->close();
 
                 </div>
             </div>
-        </div>
 
-        <div class="absolute bottom-0 flex justify-center items-center w-full h-20 border shadow-lg">
-            <div id="person-counts" class="flex items-center content-center justify-evenly mx-1 overflow-x-hidden bg-gray-800 text-white h-16 rounded-lg w-11/12 drop-shadow-2xl">
-                <h1 class="text-2xl font-bold">Total Personnel: <?php echo $total_person ?></h1>
+            <div class="absolute bottom-0 flex justify-center items-center w-full h-20 border shadow-lg">
+                <div id="person-counts" class="flex items-center content-center justify-evenly mx-1 overflow-x-hidden bg-gray-800 text-white h-16 rounded-lg w-11/12 drop-shadow-2xl">
+                    <h1 class="text-2xl font-bold">Total Personnel: <?php echo $total_person ?></h1>
+                </div>
             </div>
+
+
+            <?php
+            if (isset($_SESSION["scanmode"])) {
+                echo '
+                        <script>
+                            window.onload = function() {
+                                document.getElementById("qr-input").focus();
+                            };                
+                        </script>
+                        <form id="scan-form" method="POST" action="./Components/scan.inc.php"">
+                            <input id="qr-input" name="scan" class="opacity-0 fixed bg-green-300 text-center" type="text" oninput="scanQR(event)" onblur="keepFocus(event)" autocomplete="off">
+                        </form>
+
+                        <form method="POST" action="./Components/scan.inc.php">
+                            <button id="btn-qr" name="stopscan" title="QR Scanning Mode" class="fixed z-90 bottom-28 right-5 bg-red-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-red-700 hover:drop-shadow-2xl hover:animate-bounce duration-300" onclick="enableScan()">
+                                <i id="icon-qr" class="fa-solid fa-xmark"></i>
+                            </button>
+
+                            <button id="btn-add" title="Add A Personnel" class="fixed z-90 bottom-6 right-4 bg-blue-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-blue-700 hover:drop-shadow-2xl hover:animate-bounce duration-300">
+                                <i id="icon-add" class="fa-solid fa-user-plus"></i>
+                            </button>
+                        </form>
+                    ';
+            } else {
+                echo ' 
+                        <form id="scan-form" method="POST" action="./Components/scan.inc.php"">
+                            <input id="qr-input" name="scan" class="opacity-0 fixed bg-green-300 text-center" type="text" disabled oninput="scanQR(event)" onblur="keepFocus(event) autocomplete="off"">
+                        </form>
+
+                        <form method="POST" action="./Components/scan.inc.php">
+                            <button id="btn-qr" name="startscan" title="QR Scanning Mode" class="fixed z-90 bottom-28 right-4 bg-green-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-green-700 hover:drop-shadow-2xl hover:animate-bounce duration-300" onclick="enableScan()">
+                                <i id="icon-qr" class="fa-sharp fa-solid fa-qrcode"></i>
+                            </button>
+
+                            <button id="btn-add" title="Add A Personnel" class="fixed z-90 bottom-6 right-4 bg-blue-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-blue-700 hover:drop-shadow-2xl hover:animate-bounce duration-300">
+                                <i id="icon-add" class="fa-solid fa-user-plus"></i>
+                            </button>
+                        </form>
+                    ';
+            }
+            ?>
         </div>
 
-        <form id="scan-form" method="POST" action="">
-            <input id="qr-input" name="scan" class="fixed bg-green-300 text-center" type="text" disabled oninput="scanQR(event)" onblur="keepFocus(event)">
-        </form>
 
-
-
-        <?php
-
-        if (isset($_POST["scan"])) {
-            $scan = $_POST["scan"];
-            require_once './dbh.inc.php';
-
-            echo '
-            <span class="w-full bg-red-300 fixed -mt-8">' . $scan . '</span>
-            <div id="postData"></div>';
-        }
-        ?>
-
-        <button id="btn-qr" title="QR Scanning Mode" class="fixed z-90 bottom-28 right-4 bg-green-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-green-700 hover:drop-shadow-2xl hover:animate-bounce duration-300" onclick="enableScan()">
-            <i id="icon-qr" class="fa-sharp fa-solid fa-qrcode"></i>
-        </button>
-        <button id="btn-add" title="Add A Personnel" class="fixed z-90 bottom-6 right-4 bg-blue-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-blue-700 hover:drop-shadow-2xl hover:animate-bounce duration-300">
-            <i id="icon-add" class="fa-solid fa-user-plus"></i>
-        </button>
 
         <?php
         include './Components/meal.php';
