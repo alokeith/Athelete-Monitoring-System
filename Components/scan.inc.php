@@ -29,7 +29,7 @@ if (isset($_POST["scan"])) {
     } else {
         echo "<script>alert('Status Update Failed')</script>";
     }
-    header("location: ../index.php");
+    header("location: ../index.php?id=" . $scan);
     exit();
 
 

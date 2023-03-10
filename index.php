@@ -16,6 +16,7 @@ $person_inside = $dataIn['inside'];
 $person_outside = $dataOut['outside'];
 $total_person = $person_inside + $person_outside;
 
+
 $conn->close();
 ?>
 
@@ -31,7 +32,7 @@ $conn->close();
 
 </head>
 
-<body>
+<body onload="hideBanner()">
     <div class="bg-gray-300 drop-shadow">
         <ul class="flex border-b bg-gray-300 drop-shadow">
             <li class="flex-1 hover:bg-gray-200 cursor-pointer">
@@ -144,13 +145,38 @@ $conn->close();
         function scanQR(event) {
             const form = document.querySelector('#scan-form');
             form.submit();
-            // event.preventDefault();
         }
 
         function keepFocus(event) {
             event.preventDefault();
             document.getElementById("qr-input").focus();
         }
+
+        function hideBanner() {
+            var banner = document.getElementById("scan-banner");
+            if (!banner) {
+                setTimeout(() => {
+                    try {
+                        document.getElementById("scan-banner").className = 'hidden';
+                    } catch (err) {
+                        console.log("eror")
+                    }
+                }, 3000);
+            }
+        }
+
+        function hideBanner2() {
+            var banner = document.getElementById("scan-banner");
+            banner.className = "hidden";
+        }
+
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "s") {
+                document.getElementById("btn-qr").click();
+            }
+        });
+
+        window.onload = hideBanner();
     </script>
 
     <div class="h-[84vh] pb-4">
@@ -296,13 +322,13 @@ $conn->close();
             </div>
 
             <div class="absolute bottom-0 flex justify-center items-center w-full h-20 border shadow-lg">
-                <div id="person-counts" class="flex items-center content-center justify-evenly mx-1 overflow-x-hidden bg-gray-800 text-white h-16 rounded-lg w-11/12 drop-shadow-2xl">
+                <div on id="person-counts" class="flex items-center content-center justify-evenly mx-1 overflow-x-hidden bg-gray-800 text-white h-16 rounded-lg w-11/12 drop-shadow-2xl">
                     <h1 class="text-2xl font-bold">Total Personnel: <?php echo $total_person ?></h1>
                 </div>
             </div>
 
-
             <?php
+            include './dbh.inc.php';
             if (isset($_SESSION["scanmode"])) {
                 echo '
                         <script>
@@ -311,7 +337,7 @@ $conn->close();
                             };                
                         </script>
                         <form id="scan-form" method="POST" action="./Components/scan.inc.php"">
-                            <input id="qr-input" name="scan" class="opacity-0 fixed bg-green-300 text-center" type="text" oninput="scanQR(event)" onblur="keepFocus(event)" autocomplete="off">
+                            <input id="qr-input" name="scan" class="opacity-0 fixed bg-green-300 text-center" type="number" oninput="scanQR(event)" onblur="keepFocus(event)" autocomplete="off">
                         </form>
 
                         <form method="POST" action="./Components/scan.inc.php">
@@ -324,10 +350,39 @@ $conn->close();
                             </button>
                         </form>
                     ';
+
+                if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')
+                    $url = "https://";
+                else
+                    $url = "http://";
+                $url .= $_SERVER['HTTP_HOST'];
+                $url .= $_SERVER['REQUEST_URI'];
+
+                if (strpos($url, "id=") !== false) {
+                    $id = $_GET['id'];
+                    $sqlName = "SELECT personnel.person_name FROM personnel WHERE person_id = $id";
+                    $getName = mysqli_query($conn, $sqlName);
+                    $name = mysqli_fetch_assoc($getName);
+
+                    if (isset($name["person_name"])) {
+                        echo '<script>console.log("' . $name["person_name"] . '")</script>';
+                        echo '
+                        <div id="scan-banner" class="z-100 fixed w-[99%] rounded flex items-center justify-center drop-shadow bg-green-500 text-white text-sm shadow-lg font-bold px-4 py-3" role="alert" onmouseenter="hideBanner2()">
+                            <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M12.432 0c1.34 0 2.01.912 2.01 1.957 0 1.305-1.164 2.512-2.679 2.512-1.269 0-2.009-.75-1.974-1.99C9.789 1.436 10.67 0 12.432 0zM8.309 20c-1.058 0-1.833-.652-1.093-3.524l1.214-5.092c.211-.814.246-1.141 0-1.141-.317 0-1.689.562-2.502 1.117l-.528-.88c2.572-2.186 5.531-3.467 6.801-3.467 1.057 0 1.233 1.273.705 3.23l-1.391 5.352c-.246.945-.141 1.271.106 1.271.317 0 1.357-.392 2.379-1.207l.6.814C12.098 19.02 9.365 20 8.309 20z"/></svg>
+                            <p><strong>' . $name["person_name"] . '</strong> is checked.</p>
+                        </div>';
+                    } else {
+                        echo '
+                        <div id="scan-banner" class="z-100 fixed w-[99%] rounded flex items-center justify-center drop-shadow bg-red-500 text-white text-sm shadow-lg font-bold px-4 py-3" role="alert" onmouseenter="hideBanner2()">
+                            <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M12.432 0c1.34 0 2.01.912 2.01 1.957 0 1.305-1.164 2.512-2.679 2.512-1.269 0-2.009-.75-1.974-1.99C9.789 1.436 10.67 0 12.432 0zM8.309 20c-1.058 0-1.833-.652-1.093-3.524l1.214-5.092c.211-.814.246-1.141 0-1.141-.317 0-1.689.562-2.502 1.117l-.528-.88c2.572-2.186 5.531-3.467 6.801-3.467 1.057 0 1.233 1.273.705 3.23l-1.391 5.352c-.246.945-.141 1.271.106 1.271.317 0 1.357-.392 2.379-1.207l.6.814C12.098 19.02 9.365 20 8.309 20z"/></svg>
+                            <p><strong>Sorry, wrong ID scanned!</strong> Please try again.</p>
+                        </div>';
+                    }
+                }
             } else {
                 echo ' 
                         <form id="scan-form" method="POST" action="./Components/scan.inc.php"">
-                            <input id="qr-input" name="scan" class="opacity-0 fixed bg-green-300 text-center" type="text" disabled oninput="scanQR(event)" onblur="keepFocus(event) autocomplete="off"">
+                            <input id="qr-input" name="scan" class="opacity-0 fixed bg-green-300 text-center" type="number" disabled oninput="scanQR(event)" onblur="keepFocus(event) autocomplete="off">
                         </form>
 
                         <form method="POST" action="./Components/scan.inc.php">

@@ -8,17 +8,28 @@
     <title>Document</title>
 </head>
 
-<body>
+<body id="hell">
 
     <script>
-        window.onload = function() {
-            document.getElementById("testbox").focus();
-        };
+        document.getElementById("hell").onload = hello();
+
+        function hello() {
+            var elem = document.getElementById("hello");
+            // console.log("fail");
+
+            if (elem) {
+                console.log("success");
+            }
+            if (!elem) {
+                console.log("fail");
+            }
+        }
     </script>
 
     <div>
         <h1>TESTING</h1>
-        <input id="testbox" type="text">
+        <input id="testbox" type="text" value=20 onmouseenter="hello(this)">
+        <h1 id="hello">RESULT</h1>
     </div>
 
 </body>
