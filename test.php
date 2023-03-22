@@ -11,25 +11,42 @@
 <body id="hell">
 
     <script>
-        document.getElementById("hell").onload = hello();
+        var codes = "";
+        var codes_el = document.getElementById('codes');
+        var output_el = document.getElementById('output');
 
-        function hello() {
-            var elem = document.getElementById("hello");
-            // console.log("fail");
+        function process_key(event) {
 
-            if (elem) {
-                console.log("success");
+            var letter = event.key;
+
+            if (letter === 'Enter') {
+                event.preventDefault();
+                letter = "\n";
+                event.target.value = "";
             }
-            if (!elem) {
-                console.log("fail");
+
+            // match numbers and letters for barcode
+            if (letter.match(/^[a-z0-9]$/gi)) {
+                codes += letter;
             }
+
+
+            codes_el.value = codes;
+            output_el.innerHTML = codes;
+
         }
     </script>
 
     <div>
         <h1>TESTING</h1>
-        <input id="testbox" type="text" value=20 onmouseenter="hello(this)">
-        <h1 id="hello">RESULT</h1>
+        <form method="POST" action="myform5.php">
+            <input onkeydown="process_key(event)" />
+            <input type="submit" value="Send" />
+            <input type="hidden" name="codes" id="codes" />
+        </form>
+
+        <pre id="output">
+</pre>
     </div>
 
 </body>
