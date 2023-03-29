@@ -24,7 +24,7 @@ if (isset($_POST["scan"])) {
 
     $scan = $_POST["scan"];
     $date = date("m-d-Y");
-    $time = date("h:ia");
+    $time = date("h:iA");
 
     $updateStatus = "UPDATE personnel SET person_status = CASE person_status WHEN 1 THEN 0 ELSE 1 END WHERE person_id = $scan";
 
@@ -34,20 +34,13 @@ if (isset($_POST["scan"])) {
 
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $event_id = $row["event_id"];
                 $person_status = $row["person_status"];
-
-                if ($person_status == 1) {
-                    $status = 0;
-                } else {
-                    $status = 1;
-                }
 
                 // echo "<script>
                 // console.log('" . $time . "')
                 // </script>";
 
-                $inOutLog = "INSERT INTO log (log_date, log_time, log_status, person_id, log_event) VALUES ('$date', '$time', $status, $scan, $event_id)";
+                $inOutLog = "INSERT INTO log (log_date, log_time, log_status, person_id) VALUES ('$date', '$time', $person_status, $scan)";
 
                 if (mysqli_query($conn, $inOutLog)) {
                     echo 'Success';
@@ -61,9 +54,4 @@ if (isset($_POST["scan"])) {
     }
     header("location: ../index.php?id=" . $scan);
     exit();
-
-
-    // echo '
-    // <span class="w-full bg-red-300 fixed -mt-8">' . $scan . '</span>
-    // ';
 }
