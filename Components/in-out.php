@@ -82,8 +82,8 @@
     <div class="w-1/2 border-r-2 border-white ">
         <div class="flex h-auto justify-evenly items-center font-bold">
             <h1 class="w-11/12 text-center text-3xl">ATHLETES OUTSIDE THE QUARTER</h1>
-            <div class="p-2 border-2 border-black w-24 bg-red-200 flex justify-center">
-                <h1 class="float-left text-6xl text-center"><?php echo $person_outside; ?></h1>
+            <div class="p-2 border-2 text-center border-black w-24 bg-red-200 flex justify-center items-center">
+                <h1 class="text-6xl"><?php echo $person_outside; ?></h1>
             </div>
         </div>
         <div class="h-full overflow-x-hidden mt-2 ml-1 scroll-style pb-20">

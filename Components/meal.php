@@ -97,7 +97,7 @@ $nomeal = $dataNoMeal['nomeal'];
         <div class="flex h-auto justify-evenly items-center font-bold">
             <h1 class="w-11/12 text-center text-3xl">ATHLETES TAKEN MEAL</h1>
             <div class="p-2 border-2 border-black w-24 bg-red-200 flex justify-center">
-                <h1 class="float-left text-6xl text-center"><?php echo $nomeal; ?></h1>
+                <h1 class="text-6xl text-center"><?php echo $nomeal; ?></h1>
             </div>
         </div>
         <div class="h-full overflow-x-hidden mt-2 ml-1 scroll-style pb-20">

@@ -19,13 +19,16 @@ if (isset($_POST["stopscan"])) {
     exit();
 }
 
-
 if (isset($_POST["scan"])) {
     include '../dbh.inc.php';
 
     $scan = $_POST["scan"];
     $date = date("m-d-Y");
     $time = date("h:iA");
+
+    $pattern = "/[^0-9]/";
+    $replacement = "";
+    $scan = preg_replace($pattern, $replacement, $scan);
 
     $updateStatus = "UPDATE personnel SET person_status = CASE person_status WHEN 1 THEN 0 ELSE 1 END WHERE person_id = '$scan'";
 
@@ -76,39 +79,39 @@ if (isset($_POST["stopmealscan"])) {
     exit();
 }
 
-// if (isset($_POST["scan-meal"])) {
-//     include '../dbh.inc.php';
+if (isset($_POST["scan-meal"])) {
+    include '../dbh.inc.php';
 
-//     $scan = $_POST["scan-meal"];
-//     $date = date("m-d-Y");
-//     $time = date("h:iA");
+    $scan = $_POST["scan-meal"];
+    $date = date("m-d-Y");
+    $time = date("h:iA");
 
-//     $updateStatus = "UPDATE personnel SET meal = CASE meal WHEN 1 THEN 0 ELSE 1 END WHERE person_id = '$scan'";
+    $updateStatus = "UPDATE personnel SET meal = CASE meal WHEN 1 THEN 0 ELSE 1 END WHERE person_id = '$scan'";
 
-//     if (mysqli_query($conn, $updateStatus)) {
-//         $selectSQL = "SELECT * FROM personnel WHERE person_id = '$scan'";
-//         $result = $conn->query($selectSQL);
+    if (mysqli_query($conn, $updateStatus)) {
+        $selectSQL = "SELECT * FROM personnel WHERE person_id = '$scan'";
+        $result = $conn->query($selectSQL);
 
-//         if ($result->num_rows > 0) {
-//             while ($row = $result->fetch_assoc()) {
-//                 $meal = $row["meal"];
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $meal = $row["meal"];
 
-//                 // echo "<script>
-//                 // console.log('" . $time . "')
-//                 // </script>";
+                // echo "<script>
+                // console.log('" . $time . "')
+                // </script>";
 
-//                 $mealLog = "INSERT INTO meal_log (person_id, meal_type, meal_date, meal_time) VALUES ('$scan', 'Breakfast', '$date', '$time')";
+                $mealLog = "INSERT INTO meal_log (person_id, meal_type, meal_date, meal_time) VALUES ('$scan', 'Breakfast', '$date', '$time')";
 
-//                 if (mysqli_query($conn, $mealLog)) {
-//                     echo 'Success';
-//                 } else {
-//                     echo 'Fail';
-//                 }
-//             }
-//         }
-//     } else {
-//         echo "<script>alert('Status Update Failed')</script>";
-//     }
-//     header("location: ../index.php?id=" . $scan);
-//     exit();
-// }
+                if (mysqli_query($conn, $mealLog)) {
+                    echo 'Success';
+                } else {
+                    echo 'Fail';
+                }
+            }
+        }
+    } else {
+        echo "<script>alert('Status Update Failed')</script>";
+    }
+    header("location: ../index.php?id=" . $scan);
+    exit();
+}
