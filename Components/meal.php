@@ -1,10 +1,24 @@
+<?php
+$sqlMeal = "SELECT COUNT(*) as meal FROM personnel WHERE meal = 0";
+$resMeal = mysqli_query($conn, $sqlMeal);
+$dataMeal = mysqli_fetch_assoc($resMeal);
+
+$meal = $dataMeal['meal'];
+
+$sqlNoMeal = "SELECT COUNT(*) as nomeal FROM personnel WHERE meal = 1";
+$resNoMeal = mysqli_query($conn, $sqlNoMeal);
+$dataNoMeal = mysqli_fetch_assoc($resNoMeal);
+
+$nomeal = $dataNoMeal['nomeal'];
+?>
+
 <div id="meal-table" class="hidden">
     <!-- ATHLETES NOT YET TAKEN MEAL -->
     <div class="w-1/2 border-r-2 border-white">
         <div class="flex h-auto justify-evenly items-center font-bold">
             <h1 class="w-11/12 text-center text-3xl">ATHLETES NOT YET TAKEN MEAL</h1>
             <div class="p-2 border-2 border-black w-24 bg-green-200 flex justify-center">
-                <h1 class="float-left text-6xl text-center"><?php echo $person_inside ?></h1>
+                <h1 class="float-left text-6xl text-center"><?php echo $meal ?></h1>
             </div>
         </div>
         <div class="h-full overflow-x-hidden mt-2 mr-1 scroll-style pb-20">
@@ -19,7 +33,7 @@
                     $event_id = $row["event_id"];
                     $event_name = $row["event_name"];
 
-                    $sqlCount = "SELECT COUNT(*) as members FROM personnel WHERE event_id = $event_id AND person_status = 1";
+                    $sqlCount = "SELECT COUNT(*) as members FROM personnel WHERE event_id = $event_id AND meal = 0";
                     $countQuery = mysqli_query($conn, $sqlCount);
                     $fetchQuery = mysqli_fetch_assoc($countQuery);
 
@@ -46,7 +60,7 @@
                                                                 </thead class="border-b">
                                                                 <tbody id="' . "nomeal" . $event_id . '" class="fadeAnim hidden">';
 
-                    $sql2 = "SELECT * FROM personnel WHERE event_id = " . $event_id . " AND person_status = 1";
+                    $sql2 = "SELECT * FROM personnel WHERE event_id = " . $event_id . " AND meal = 0";
                     $result2 = $conn->query($sql2);
 
                     if ($result2->num_rows > 0) {
@@ -83,7 +97,7 @@
         <div class="flex h-auto justify-evenly items-center font-bold">
             <h1 class="w-11/12 text-center text-3xl">ATHLETES TAKEN MEAL</h1>
             <div class="p-2 border-2 border-black w-24 bg-red-200 flex justify-center">
-                <h1 class="float-left text-6xl text-center"><?php echo $person_outside; ?></h1>
+                <h1 class="float-left text-6xl text-center"><?php echo $nomeal; ?></h1>
             </div>
         </div>
         <div class="h-full overflow-x-hidden mt-2 ml-1 scroll-style pb-20">
@@ -99,7 +113,7 @@
                     $event_id = $row["event_id"];
                     $event_name = $row["event_name"];
 
-                    $sqlCount = "SELECT COUNT(*) as members FROM personnel WHERE event_id = $event_id AND person_status = 0";
+                    $sqlCount = "SELECT COUNT(*) as members FROM personnel WHERE event_id = $event_id AND meal = 1";
                     $countQuery = mysqli_query($conn, $sqlCount);
                     $fetchQuery = mysqli_fetch_assoc($countQuery);
 
@@ -126,7 +140,7 @@
                                                         </thead class="border-b">
                                                         <tbody id="' . "meal" . $event_id . '" class="fadeAnim hidden">';
 
-                    $sql2 = "SELECT * FROM personnel WHERE event_id = " . $event_id . " AND person_status = 0";
+                    $sql2 = "SELECT * FROM personnel WHERE event_id = " . $event_id . " AND meal = 1";
                     $result2 = $conn->query($sql2);
 
                     if ($result2->num_rows > 0) {
@@ -160,7 +174,7 @@
 
     <?php
     include './dbh.inc.php';
-    if (isset($_SESSION["scanmeal"])) {
+    if (isset($_SESSION["mealscanmode"])) {
         echo '
             <script>
                 window.onload = function() {
@@ -168,12 +182,12 @@
                 };                
             </script>
             <form id="scan-meal" method="POST" action="./Components/scan.inc.php"">
-                <input id="qr-meal" name="scan-meal" class="opacity-0 fixed bg-green-300 text-center" type="text" oninput="scanQR(event)" onblur="keepFocus(event)" autocomplete="off">
+                <input id="qr-meal" name="scan-meal" class="opacity-0 fixed bg-green-300 text-center" type="text" oninput="scanQRMeal(event)" onblur="keepFocusMeal(event)" autocomplete="off">
             </form>
 
             <form method="POST" action="./Components/scan.inc.php">
-                <button id="btn-qr" name="stopscan" title="Stop Scanning Mode" class="fixed z-90 bottom-28 right-5 bg-red-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-red-700 hover:drop-shadow-2xl hover:animate-bounce duration-300" onclick="enableScan()">
-                    <i id="icon-qr" class="fa-solid fa-xmark"></i>
+                <button id="btn-qr-meal" name="stopmealscan" title="Stop Scanning Mode" class="fixed z-90 bottom-28 right-5 bg-red-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-red-700 hover:drop-shadow-2xl hover:animate-bounce duration-300" onclick="enableMealScan()">
+                    <i id="icon-qr-meal" class="fa-solid fa-xmark"></i>
                 </button>
             </form>
         ';
@@ -209,12 +223,12 @@
     } else {
         echo '
             <form id="scan-meal" method="POST" action="./Components/scan.inc.php"">
-                <input id="qr-meal" name="scan-meal" class="opacity-0 fixed bg-green-300 text-center" type="number" disabled oninput="scanQR(event)" onblur="keepFocus(event) autocomplete="off">
+                <input id="qr-meal" name="scan-meal" class="opacity-0 fixed bg-green-300 text-center" type="number" disabled oninput="scanQRMeal(event)" onblur="keepFocusMeal(event) autocomplete="off">
             </form>
 
             <form method="POST" action="./Components/scan.inc.php">
-                <button id="btn-qr" name="startscan" title="QR Scanning Mode" class="fixed z-90 bottom-28 right-4 bg-green-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-green-700 hover:drop-shadow-2xl hover:animate-bounce duration-300" onclick="enableScan()">
-                    <i id="icon-qr" class="fa-sharp fa-solid fa-qrcode"></i>
+                <button id="btn-qr-meal" name="startmealscan" title="QR Scanning Mode" class="fixed z-90 bottom-28 right-4 bg-green-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-green-700 hover:drop-shadow-2xl hover:animate-bounce duration-300" onclick="enableMealScan()">
+                    <i id="icon-qr-meal" class="fa-sharp fa-solid fa-qrcode"></i>
                 </button>
 
                 <button id="btn-add" title="Add A Personnel" class="hidden fixed z-90 bottom-6 right-4 bg-blue-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-blue-700 hover:drop-shadow-2xl hover:animate-bounce duration-300">
@@ -226,10 +240,10 @@
     ?>
 
     <script>
-        function enableScan() {
-            var input = document.getElementById("qr-input");
-            var btn = document.getElementById("btn-qr");
-            var icon = document.getElementById("icon-qr");
+        function enableMealScan() {
+            var input = document.getElementById("qr-meal");
+            var btn = document.getElementById("btn-qr-meal");
+            var icon = document.getElementById("icon-qr-meal");
             if (input.disabled) {
                 btn.title = "Cancel Scanning Mode";
                 btn.className = "fixed z-90 bottom-28 right-5 bg-red-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-red-700 hover:drop-shadow-2xl hover:animate-bounce duration-300";
@@ -244,14 +258,14 @@
             input.value = "";
         }
 
-        function scanQR(event) {
-            const form = document.querySelector('#scan-form');
+        function scanQRMeal(event) {
+            const form = document.querySelector('#scan-meal');
             form.submit();
         }
 
-        function keepFocus(event) {
+        function keepFocusMeal(event) {
             event.preventDefault();
-            document.getElementById("qr-input").focus();
+            document.getElementById("qr-meal").focus();
         }
     </script>
 
