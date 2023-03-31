@@ -2,7 +2,10 @@
     <div class="w-full space-y-10">
         <div class="w-full text-center bg-gray-300">
             <h1 class="text-2xl font-bold ">Preferences</h1>
+            <button href="./id-printing/index.php" class="p-10 bg-red-300">Print ID's</button>
+
         </div>
+
 
         <div id="logs">
             <h1 class="text-2xl font-bold ">In and Out Logs</h1>

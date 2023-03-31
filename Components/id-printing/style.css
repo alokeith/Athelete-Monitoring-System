@@ -1,0 +1,52 @@
+
+
+	body {
+		margin: 0px;
+	}
+	table {
+		font-family: century gothic;
+		border-collapse: collapse;
+		width: 2.5in;
+	}
+	td {
+		padding: 10px;
+		border-collapse: collapse;
+	}
+	#id-container {
+		width: 29.7cm;
+	}
+	.id-content {
+		border:grey solid 1px;
+		width:2.5in;
+		height:3.5in;
+		display: inline-block;
+		background-image: url("pictures/idbg/bg.jpg");
+		background-repeat: no-repeat;
+		background-size: 100%;
+	}
+	.id-content-back {
+		border:grey solid 1px;
+		width:2.5in;
+		height:3.5in;
+		display: inline-block;
+		background-image: url("pictures/idbg/bg-back.jpg");
+		background-repeat: no-repeat;
+		background-size: 100%;
+	}
+	.id-pic {
+		width: 1in;
+		height: 1in;
+		background-repeat: no-repeat;
+		background-size: 100%;
+		border:black solid 1px;
+	}
+	.id-pic-list {
+		width: 15mm;
+		height: 15mm;
+		background-repeat: no-repeat;
+		background-size: 100%;
+		border:black solid 1px;
+	}
+	.code {
+		font-size: 10px;
+	}
