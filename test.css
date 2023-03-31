@@ -1,0 +1,22 @@
+.table-container {
+    height: 200px;
+    /* Set the height of the container */
+    overflow-y: auto;
+    /* Enable vertical scrolling */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead,
+tbody {
+    border: 1px solid #ccc;
+}
+
+th,
+td {
+    padding: 8px;
+    text-align: left;
+}
