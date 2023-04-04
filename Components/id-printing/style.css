@@ -38,7 +38,8 @@
 		height: 1in;
 		background-repeat: no-repeat;
 		background-size: 100%;
-		border:black solid 1px;
+		border:white solid 2px;
+		border-radius:50px;
 	}
 	.id-pic-list {
 		width: 15mm;

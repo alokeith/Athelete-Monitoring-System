@@ -46,17 +46,17 @@ $get = new getMe();
 						$eventname = $get->getItemName("event_name", "event", "event_id", $raweventid);
 						$eventcontact = $get->getItemName("event_contact", "event", "event_id", $raweventid);
 						if ($eventcontact == "") {
-							$eventcontact = "No Contact";
+							$eventcontact = "";
 						}
 						$eventname = ucwords($eventname);
 						$personrole = $get->getItemName("role_name", "role", "role_id", $role);
 						$personrole = ucfirst($personrole);
 						$person .= "
-							<div class='id-content'>
+							<div class='id-content' ID='id-content-$personid'>
 								<center>
-								<table>
+								<table id='tbl-$personid'>
 									<tr>
-										<td colspan='2'><br><br></td>
+										<td colspan='2'></td>
 									<tr>
 									<tr>
 										<td colspan='2'>
@@ -65,7 +65,7 @@ $get = new getMe();
 										</td>
 									</tr>
 									<tr>
-										<td colspan='2'><b>$personname</b></td>
+										<td colspan='2'><b id='person-name-$personid'>$personname</b></td>
 									</tr>
 									<tr>
 										<td colspan='2'>$eventname</td>
@@ -77,7 +77,7 @@ $get = new getMe();
 								</table>
 								</center>
 							</div>
-							<div class='id-content-back'>
+							<div class='id-content-back' ID='id-content-back-$personid'>
 								<table>
 									<tr>
 										<td>
@@ -92,7 +92,7 @@ $get = new getMe();
 									width:60,
 									height:60
 								});
-								function makeCode() {		
+								function makeCode() {
 									qrcode$personid.makeCode('$personcode');
 								}
 								makeCode();
@@ -131,16 +131,16 @@ $get = new getMe();
 						$eventname = ucwords($eventname);
 						$eventcontact = $get->getItemName("event_contact", "event", "event_id", $eventid);
 						if ($eventcontact == "") {
-							$eventcontact = "No Contact";
+							$eventcontact = "";
 						}
 						$personrole = $get->getItemName("role_name", "role", "role_id", $role);
 						$personrole = ucfirst($personrole);
 						$person .= "
-							<div class='id-content'>
+							<div class='id-content' id='id-content'>
 								<center>
-								<table>
+								<table id='tbl'>
 									<tr>
-										<td colspan='2'><br><br></td>
+										<td colspan='2'></td>
 									<tr>
 									<tr>
 										<td colspan='2'>
@@ -149,7 +149,7 @@ $get = new getMe();
 										</td>
 									</tr>
 									<tr>
-										<td colspan='2'><b>$personname</b></td>
+										<td colspan='2'><b id='person-name'>$personname</b></td>
 									</tr>
 									<tr>
 										<td colspan='2'>$eventname</td>
@@ -204,7 +204,7 @@ $get = new getMe();
 <script type="text/javascript">
 	window.print();
 	window.onafterprint = function() {
-		window.close();
+		//window.close();
 	}
 	//window.location = "../id-printing/";
 </script>

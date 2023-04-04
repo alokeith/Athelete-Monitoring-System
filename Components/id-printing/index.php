@@ -51,7 +51,6 @@ if (isset($_SESSION["alert"])) {
 							$persons .= "
 									      <li class='collection-item'>
 									      	<div class='row'>
-												
 									      		<div class='col s4'>
 									      			<a class='btn btn-waves-effect grey'  onclick='printidin(\"1\",\"$personid\")' title='Print ID for $personname'>Print ID</a>
 									      		</div>

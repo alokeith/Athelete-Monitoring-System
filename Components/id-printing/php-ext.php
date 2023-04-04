@@ -5,7 +5,7 @@ class queries {
 	public $result;
 	public function getList($table){
 		$conn = new mysqli("localhost","root","","ams");
-		$sql = "SELECT * FROM $table";
+		$sql = "SELECT * FROM $table ORDER BY event_name ASC";
 		$result = $conn->query($sql);
 		//$stmt = $conn->prepare("SELECT * FROM $table");
 

@@ -67,6 +67,18 @@ $conn->close();
     <link href="style.css" rel="stylesheet">
     <script src="https://kit.fontawesome.com/df92423fc4.js" crossorigin="anonymous"></script>
 
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .modal {
+            transition: opacity 0.25s ease;
+        }
+
+        body.modal-active {
+            overflow-x: hidden;
+            overflow-y: visible !important;
+        }
+    </style>
+
 </head>
 
 <body onload="hideBanner()">
@@ -156,10 +168,7 @@ $conn->close();
 
         function toggleTable(table) {
             var element = document.getElementById(table);
-
             element.classList.toggle("hidden");
-
-            // console.log(element);
         }
 
         function toggleLog(log) {
@@ -235,7 +244,6 @@ $conn->close();
     </script>
 
     <div class="h-[84vh] pb-4">
-        <input type="text" on>
         <!-- IN OUT TABLE -->
         <div id="in-out-table" class="flex justify-evenly mx-2 mt-2 overflow-hidden h-full">
             <!-- INSIDE -->

@@ -191,26 +191,24 @@ $nomeal = $dataNoMeal['nomeal'];
     </div>
 
     <div class="absolute bg-gray-800 bottom-0 w-full h-20 flex items-center justify-center space-x-2 border shadow-lg text-center">
-        <h1 class="text-white text-3xl font-bold w-2/12 mr-4">Reservations </h1>
-        <div class="flex justify-evenly items-center w-10/12 h-auto bg-blue-300">
-            <div class="flex items-center content-center justify-evenly mx-1 overflow-x-hidden bg-gray-800 text-white h-16 px-8 rounded-lg drop-shadow-2xl hover:bg-gray-700 cursor-default">
-                <span class="text-lg font-semibold">
-                    <p style="text-decoration: underline;"> Reserve for April 20, 2023 </p><?php echo $athletes ?>
+        <h1 class="text-white text-2xl font-bold w-2/12 mr-4">Reservations </h1>
+        <div class="flex items-center w-10/12 h-auto">
+            <div class="flex items-center content-center justify-evenly mx-1 overflow-x-hidden bg-gray-800 text-white py-2 px-8 rounded-lg drop-shadow-2xl hover:bg-gray-700 cursor-default">
+                <span class="text-md font-semibold">
+                    <span class="flex"> Reserve for <p class="ml-1" style="text-decoration: underline;">April 20, 2023</p></span>
+                    <p><?php echo $athletes ?> Persons</p>
                 </span>
             </div>
-            <div class="flex items-center content-center justify-evenly mx-1 overflow-x-hidden bg-gray-800 text-white h-16 px-8 rounded-lg drop-shadow-2xl hover:bg-gray-700 cursor-default">
-                <span class="text-lg font-semibold">
-                    <p style="text-decoration: underline;"> Reserve for April 20, 2023 </p><?php echo $athletes ?>
+            <div class="flex items-center content-center justify-evenly mx-1 overflow-x-hidden bg-gray-800 text-white py-2 px-8 rounded-lg drop-shadow-2xl hover:bg-gray-700 cursor-default">
+                <span class="text-md font-semibold">
+                    <span class="flex"> Reserve for <p class="ml-1" style="text-decoration: underline;">April 20, 2023</p></span>
+                    <p><?php echo $athletes ?> Persons</p>
                 </span>
             </div>
-            <div class="flex items-center content-center justify-evenly mx-1 overflow-x-hidden bg-gray-800 text-white h-16 px-8 rounded-lg drop-shadow-2xl hover:bg-gray-700 cursor-default">
-                <span class="text-lg font-semibold">
-                    <p style="text-decoration: underline;"> Reserve for April 20, 2023 </p><?php echo $athletes ?>
-                </span>
-            </div>
-            <div class="flex items-center content-center justify-evenly mx-1 overflow-x-hidden bg-gray-800 text-white h-16 px-8 rounded-lg drop-shadow-2xl hover:bg-gray-700 cursor-default">
-                <span class="text-lg font-semibold">
-                    <p style="text-decoration: underline;"> Reserve for April 20, 2023 </p><?php echo $athletes ?>
+            <div class="flex items-center content-center justify-evenly mx-1 overflow-x-hidden bg-gray-800 text-white py-2 px-8 rounded-lg drop-shadow-2xl hover:bg-gray-700 cursor-default">
+                <span class="text-md font-semibold">
+                    <span class="flex"> Reserve for <p class="ml-1" style="text-decoration: underline;">April 20, 2023</p></span>
+                    <p><?php echo $athletes ?> Persons</p>
                 </span>
             </div>
         </div>
@@ -344,10 +342,6 @@ $nomeal = $dataNoMeal['nomeal'];
                             <svg fill="white" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 448 512">
                                 <path d="M0 80C0 53.5 21.5 32 48 32h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V80zM64 96v64h64V96H64zM0 336c0-26.5 21.5-48 48-48h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V336zm64 16v64h64V352H64zM304 32h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H304c-26.5 0-48-21.5-48-48V80c0-26.5 21.5-48 48-48zm80 64H320v64h64V96zM256 304c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s7.2-16 16-16s16 7.2 16 16v96c0 8.8-7.2 16-16 16H368c-8.8 0-16-7.2-16-16s-7.2-16-16-16s-16 7.2-16 16v64c0 8.8-7.2 16-16 16H272c-8.8 0-16-7.2-16-16V304zM368 480a16 16 0 1 1 0-32 16 16 0 1 1 0 32zm64 0a16 16 0 1 1 0-32 16 16 0 1 1 0 32z" />
                             </svg>
-                        </button>
-
-                        <button id="btn-add" title="Add A Personnel" class="hidden fixed z-90 bottom-6 right-4 bg-blue-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-blue-700 hover:drop-shadow-2xl hover:animate-bounce duration-300">
-                            <i id="icon-add" class="fa-solid fa-user-plus"></i>
                         </button>
                     ';
     }
