@@ -9,6 +9,7 @@ $get = new getMe();
 
 <!DOCTYPE html>
 <html>
+
 <head>
 
 
@@ -16,40 +17,41 @@ $get = new getMe();
 	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<title>QR Code Generator</title>
 </head>
+
 <body>
 
-<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" type="text/css" href="style.css">
 
-<?php
+	<?php
 
-if (isset($_GET["printid"])){
-	if (isset($_GET["eventid"])){
-		$raweventid = $_GET["eventid"];
-		///CHECK ID IF EXIST IN DATABASE;
-		$checkid = $sql->checkid("event", "event_id", $raweventid);
-		$checkconfirm = $checkid->num_rows;
-		if ($checkconfirm < 1){
-			$_SESSION["alert"] = "Event does not exist!";
-			header("location:../id-printing");
-			exit();
-		}else{
-			$getperson = $sql->getitembyrelatedid("personnel", "event_id", $raweventid);
-			$person = "";
-			if ($getperson->num_rows > 0){
-				while ($r = $getperson->fetch_assoc()) {
-					$personid = $r["person_id"];
-					$personname = $r["person_name"];
-					$role = $r["role_id"];
-					$personcode = "CVRAA$personid";
-					$eventname = $get->getItemName("event_name", "event", "event_id", $raweventid);
-					$eventcontact = $get->getItemName("event_contact", "event", "event_id", $raweventid);
-					if ($eventcontact == ""){
-						$eventcontact = "Contact not provided.";
-					}
-					$eventname = ucwords($eventname);
-					$personrole = $get->getItemName("role_name", "role", "role_id", $role);
-					$personrole = ucfirst($personrole);
-					$person .= "
+	if (isset($_GET["printid"])) {
+		if (isset($_GET["eventid"])) {
+			$raweventid = $_GET["eventid"];
+			///CHECK ID IF EXIST IN DATABASE;
+			$checkid = $sql->checkid("event", "event_id", $raweventid);
+			$checkconfirm = $checkid->num_rows;
+			if ($checkconfirm < 1) {
+				$_SESSION["alert"] = "Event does not exist!";
+				header("location:../id-printing");
+				exit();
+			} else {
+				$getperson = $sql->getitembyrelatedid("personnel", "event_id", $raweventid);
+				$person = "";
+				if ($getperson->num_rows > 0) {
+					while ($r = $getperson->fetch_assoc()) {
+						$personid = $r["person_id"];
+						$personname = $r["person_name"];
+						$role = $r["role_id"];
+						$personcode = "CVRAA$personid";
+						$eventname = $get->getItemName("event_name", "event", "event_id", $raweventid);
+						$eventcontact = $get->getItemName("event_contact", "event", "event_id", $raweventid);
+						if ($eventcontact == "") {
+							$eventcontact = "No Contact";
+						}
+						$eventname = ucwords($eventname);
+						$personrole = $get->getItemName("role_name", "role", "role_id", $role);
+						$personrole = ucfirst($personrole);
+						$person .= "
 							<div class='id-content'>
 								<center>
 								<table>
@@ -96,44 +98,44 @@ if (isset($_GET["printid"])){
 								makeCode();
 							</script>
 						";
-				}
-				$persons = "
+					}
+					$persons = "
 							$person
 					";
-			}else{
-				$persons = "No personnel in this event.";
+				} else {
+					$persons = "No personnel in this event.";
+				}
 			}
 		}
-	}
-	////FOR INDIVIDUAL PRINTING
-	if (isset($_GET["personid"])){
-		$rawpersonid = $_GET["personid"];
-		///CHECK ID IF EXIST IN DATABASE;
-		$checkid = $sql->checkid("personnel", "person_id", $rawpersonid);
-		$checkconfirm = $checkid->num_rows;
-		if ($checkconfirm < 1){
-			$_SESSION["alert"] = "Person does not exist!";
-			header("location:../id-printing");
-			exit();
-		}else{
-			$getperson = $sql->getitembyrelatedid("personnel", "person_id", $rawpersonid);
-			$person = "";
-			if ($getperson->num_rows > 0){
-				while ($r = $getperson->fetch_assoc()) {
-					$personid = $r["person_id"];
-					$personname = $r["person_name"];
-					$role = $r["role_id"];
-					$personcode = "CVRAA$personid";
-					$eventid = $get->getItemName("event_id", "personnel", "person_id", $personid);
-					$eventname = $get->getItemName("event_name", "event", "event_id", $eventid);
-					$eventname = ucwords($eventname);
-					$eventcontact = $get->getItemName("event_contact", "event", "event_id", $eventid);
-					if ($eventcontact == ""){
-						$eventcontact = "Contact not provided.";
-					}
-					$personrole = $get->getItemName("role_name", "role", "role_id", $role);
-					$personrole = ucfirst($personrole);
-					$person .= "
+		////FOR INDIVIDUAL PRINTING
+		if (isset($_GET["personid"])) {
+			$rawpersonid = $_GET["personid"];
+			///CHECK ID IF EXIST IN DATABASE;
+			$checkid = $sql->checkid("personnel", "person_id", $rawpersonid);
+			$checkconfirm = $checkid->num_rows;
+			if ($checkconfirm < 1) {
+				$_SESSION["alert"] = "Person does not exist!";
+				header("location:../id-printing");
+				exit();
+			} else {
+				$getperson = $sql->getitembyrelatedid("personnel", "person_id", $rawpersonid);
+				$person = "";
+				if ($getperson->num_rows > 0) {
+					while ($r = $getperson->fetch_assoc()) {
+						$personid = $r["person_id"];
+						$personname = $r["person_name"];
+						$role = $r["role_id"];
+						$personcode = "CVRAA$personid";
+						$eventid = $get->getItemName("event_id", "personnel", "person_id", $personid);
+						$eventname = $get->getItemName("event_name", "event", "event_id", $eventid);
+						$eventname = ucwords($eventname);
+						$eventcontact = $get->getItemName("event_contact", "event", "event_id", $eventid);
+						if ($eventcontact == "") {
+							$eventcontact = "No Contact";
+						}
+						$personrole = $get->getItemName("role_name", "role", "role_id", $role);
+						$personrole = ucfirst($personrole);
+						$person .= "
 							<div class='id-content'>
 								<center>
 								<table>
@@ -180,32 +182,30 @@ if (isset($_GET["printid"])){
 								makeCode();
 							</script>
 						";
-				}
-				$persons = "
+					}
+					$persons = "
 							$person
 					";
-			}else{
-				$persons = "No personnel in this event.";
+				} else {
+					$persons = "No personnel in this event.";
+				}
 			}
 		}
 	}
-	
-}
 
-?>
-<div id="id-container">
-	<?php echo $persons; ?>
-</div>
+	?>
+	<div id="id-container">
+		<?php echo $persons; ?>
+	</div>
 
 
 </body>
 
 <script type="text/javascript">
-	
 	window.print();
 	window.onafterprint = function() {
-				window.close();
-			}
+		window.close();
+	}
 	//window.location = "../id-printing/";
 </script>
 

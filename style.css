@@ -27,4 +27,13 @@
 
 .scroll-style::-webkit-scrollbar-thumb {
 	background-color: #1F2937;
+	border-radius: 5px;
+	height: 400px;
 }
+
+.short-scroll::-webkit-scrollbar {
+	height: 10rem;
+	/* Adjust the height as needed */
+}
+
+.short-scroll::-webkit-scrollbar-thumb {}
