@@ -12,7 +12,7 @@
         <div class="modal-content py-4 text-left px-6">
             <!--Title-->
             <div class="flex justify-between items-center pb-3">
-                <p id="person-name" class="text-2xl font-bold">Simple Modal!</p>
+                <p id="person-name" class="text-2xl font-bold"></p>
             </div>
 
             <!--Body-->

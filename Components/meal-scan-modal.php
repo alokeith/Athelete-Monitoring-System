@@ -15,7 +15,7 @@
             <div class="bg-white w-full mt-2 flex justify-center space-x-1 p-4 rounded-lg border shadow-inner drop-shadow">
                 <div id="meal-choice" class="w-full mr-2">
                     <p class="font-bold text-lg">Meal Type</p>
-                    <div class="w-full flex flex-col mt-2 space-y-2">
+                    <div class="w-full flex flex-col mt-3 space-y-2">
                         <div class="w-full flex items-center space-x-2 px-8 border border-gray-500 rounded bg-gray-200 hover:bg-gray-300" onclick="enableReservation()">
                             <input checked id="meal-breakfast" type="radio" value="breakfast" name="meal-type" class="w-4 h-4">
                             <label for="meal-breakfast" class="w-full py-3 text-sm font-semibold text-gray-900 dark:text-gray-300">Breakfast</label>
@@ -43,14 +43,19 @@
                     </div>
                 </div>
 
-                <div id="reserve-settings" class="w-7/12 hidden">
+                <div id="reserve-settings" class="hidden">
                     <p class="font-bold text-lg">Reservation</p>
                     <div class="mt-2">
+
+
+
+                        <!-- DATE -->
                         <div class="mt-2">
                             <p class="font-semibold text-sm">Reserve Date</p>
                             <input id="res-date" class="mt-1 w-full border-2 border-gray rounded text-center" disabled type="date">
                         </div>
 
+                        <!-- MEAL TYPES -->
                         <div class="mt-3">
                             <h3 class="mb-1 text-sm font-semibold text-gray-900 dark:text-white">Meal Type</h3>
                             <ul class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
@@ -86,14 +91,20 @@
                                 </li>
                             </ul>
                         </div>
-
                     </div>
                 </div>
 
             </div>
+
             <div class="flex justify-center pt-4">
-                <button class="modal2-close px-16 bg-green-500 p-3 rounded-lg text-white shadow font-semibold hover:bg-green-400">Start Scan</button>
+                <form method="POST" action="./Components/scan.inc.php">
+                    <button id="btn-qr-meal" name="startmealscan" title="QR Scanning Mode" class="modal2-close px-16 bg-green-500 p-3 rounded-lg text-white shadow font-semibold hover:bg-green-400" onclick="enableMealScan()">
+                        Start Scan
+                    </button>
+                </form>
             </div>
+
+
         </div>
 
     </div>
@@ -145,6 +156,13 @@
             mealChoice.className = "w-full mr-2";
             reserve.classList = "hidden";
             document.getElementById("res-date").value = "";
+
+            var c = document.getElementsByTagName('input');
+            for (var i = 0; i < c.length; i++) {
+                if (c[i].type == 'checkbox') {
+                    c[i].checked = false;
+                }
+            }
         }
     }
 </script>

@@ -72,8 +72,28 @@
 
             <body class="bg-gray-200 flex items-center justify-center h-screen">
 
-                <button class="bg-transparent border border-gray-500 hover:border-indigo-500 text-gray-500 hover:text-indigo-500 font-bold py-2 px-4 rounded-full" onclick="toggleModal()">Open Modal</button>
+                <div>
+                    <div class="flex justify-center">
+                        <div class="mb-3 xl:w-96">
+                            <select data-te-select-init data-te-select-filter="true">
+                                <option value="1">One</option>
+                                <option value="2">Two</option>
+                                <option value="3">Three</option>
+                                <option value="4">Four</option>
+                                <option value="5">Five</option>
+                                <option value="6">Six</option>
+                                <option value="7">Seven</option>
+                                <option value="8">Eight</option>
+                                <option value="9">Nine</option>
+                                <option value="10">Ten</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
 
+
+
+                <button class="bg-transparent border border-gray-500 hover:border-indigo-500 text-gray-500 hover:text-indigo-500 font-bold py-2 px-4 rounded-full" onclick="toggleModal()">Open Modal</button>
                 <!--Modal-->
                 <div class="modal opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center">
                     <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
@@ -98,10 +118,10 @@
                             </div>
 
                             <!--Body-->
-                            <div class="bg-white w-full mt-2 flex justify-between space-x-1 p-4 rounded-lg border shadow-inner drop-shadow">
-                                <div id="meal-choice" class="w-full mr-2 pr-2 border-r-2">
+                            <div class="bg-white w-full mt-2 flex justify-center space-x-1 p-4 rounded-lg border shadow-inner drop-shadow">
+                                <div id="meal-choice" class="w-full mr-2">
                                     <p class="font-bold text-lg">Meal Type</p>
-                                    <div class="w-full flex flex-col mt-2 space-y-2">
+                                    <div class="w-full flex flex-col mt-3 space-y-2">
                                         <div class="w-full flex items-center space-x-2 px-8 border border-gray-500 rounded bg-gray-200 hover:bg-gray-300" onclick="enableReservation()">
                                             <input checked id="meal-breakfast" type="radio" value="breakfast" name="meal-type" class="w-4 h-4">
                                             <label for="meal-breakfast" class="w-full py-3 text-sm font-semibold text-gray-900 dark:text-gray-300">Breakfast</label>
@@ -129,61 +149,64 @@
                                     </div>
                                 </div>
 
-                                <div id="reserve-settings" class="w-7/12 hidden">
+                                <div id="reserve-settings" class="hidden">
                                     <p class="font-bold text-lg">Reservation</p>
                                     <div class="mt-2">
+                                        <!-- DATE -->
                                         <div class="mt-2">
                                             <p class="font-semibold text-sm">Reserve Date</p>
                                             <input id="res-date" class="mt-1 w-full border-2 border-gray rounded text-center" disabled type="date">
                                         </div>
 
-                                        <h3 class="mb-4 text-sm font-semibold text-gray-900 dark:text-white">Meal Type</h3>
-                                        <ul class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                                            <li class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
-                                                <div class="flex items-center pl-3">
-                                                    <input id="vue-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                                    <label for="vue-checkbox" class="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Vue JS</label>
-                                                </div>
-                                            </li>
-                                            <li class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
-                                                <div class="flex items-center pl-3">
-                                                    <input id="react-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                                    <label for="react-checkbox" class="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">React</label>
-                                                </div>
-                                            </li>
-                                            <li class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
-                                                <div class="flex items-center pl-3">
-                                                    <input id="angular-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                                    <label for="angular-checkbox" class="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Angular</label>
-                                                </div>
-                                            </li>
-                                            <li class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
-                                                <div class="flex items-center pl-3">
-                                                    <input id="laravel-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                                    <label for="laravel-checkbox" class="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Laravel</label>
-                                                </div>
-                                            </li>
-                                        </ul>
-
+                                        <!-- MEAL TYPES -->
+                                        <div class="mt-3">
+                                            <h3 class="mb-1 text-sm font-semibold text-gray-900 dark:text-white">Meal Type</h3>
+                                            <ul class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                                <li class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
+                                                    <div class="flex items-center pl-3">
+                                                        <input id="breakfast-res" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
+                                                        <label for="breakfast-res" class="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Breakfast</label>
+                                                    </div>
+                                                </li>
+                                                <li class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
+                                                    <div class="flex items-center pl-3">
+                                                        <input id="snack1-res" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
+                                                        <label for="snack1-res" class="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">AM Snack</label>
+                                                    </div>
+                                                </li>
+                                                <li class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
+                                                    <div class="flex items-center pl-3">
+                                                        <input id="lunch-res" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
+                                                        <label for="lunch-res" class="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Lunch</label>
+                                                    </div>
+                                                </li>
+                                                <li class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
+                                                    <div class="flex items-center pl-3">
+                                                        <input id="snack2-res" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
+                                                        <label for="snack2-res" class="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">PM Snack</label>
+                                                    </div>
+                                                </li>
+                                                <li class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
+                                                    <div class="flex items-center pl-3">
+                                                        <input id="dinner-res" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
+                                                        <label for="dinner-res" class="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Dinner</label>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
 
                             </div>
+
                             <div class="flex justify-center pt-2">
                                 <button class="modal2-close px-16 bg-green-400 p-3 rounded-lg text-white shadow font-semibold hover:bg-green-300">Start Scan</button>
                             </div>
                         </div>
                     </div>
 
-                    <script>
-                        // var openmodal = document.querySelectorAll('.modal-open')
-                        // for (var i = 0; i < openmodal.length; i++) {
-                        //     openmodal[i].addEventListener('click', function(event) {
-                        //         event.preventDefault()
-                        //         toggleModal()
-                        //     })
-                        // }
 
+                    <script>
                         const overlay = document.querySelector('.modal-overlay')
                         overlay.addEventListener('click', toggleModal)
 
@@ -213,7 +236,52 @@
                             modal.classList.toggle('pointer-events-none')
                             body.classList.toggle('modal-active')
                         }
+
+                        function enableReservation() {
+                            var mealChoice = document.getElementById("meal-choice");
+                            var reserve = document.getElementById("reserve-settings");
+
+                            var reserveRadio = document.getElementById("meal-reserve");
+
+                            if (reserveRadio.checked) {
+                                mealChoice.className = "w-auto mr-2 pr-2 border-r-2";
+                                reserve.classList = "w-7/12";
+                                document.getElementById("res-date").disabled = false
+                            } else {
+                                mealChoice.className = "w-full mr-2";
+                                reserve.classList = "hidden";
+                                document.getElementById("res-date").value = "";
+
+                                var c = document.getElementsByTagName('input');
+                                for (var i = 0; i < c.length; i++) {
+                                    if (c[i].type == 'checkbox') {
+                                        c[i].checked = false;
+                                    }
+                                }
+                            }
+                        }
+
+                        function getSelectedOptions() {
+                            var selectElement = document.getElementById("mySelect");
+                            var selectedOptions = [];
+
+                            // Loop through each option in the select element
+                            for (var i = 0; i < selectElement.options.length; i++) {
+                                var option = selectElement.options[i];
+
+                                // Check if the option is selected
+                                if (option.selected) {
+                                    selectedOptions.push(option.value); // Add the selected option value to the array
+                                }
+                            }
+
+                            // Display the selected options
+                            alert("Selected options: " + selectedOptions.join(", "));
+                        }
                     </script>
+                </div>
+
+
             </body>
 
             </html>
