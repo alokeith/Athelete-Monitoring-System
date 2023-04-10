@@ -60,12 +60,19 @@ if (isset($_POST["scan"])) {
     exit();
 }
 
-
 if (isset($_POST["startmealscan"])) {
     require_once '../dbh.inc.php';
 
-    session_start();
-    $_SESSION["mealscanmode"] = true;
+
+    $mealType = $_POST["meal-type"];
+
+    if ($mealType == "reserve") {
+        echo $_POST["meal-type"] . " " . $_POST["res-date"] . " " . $_POST["res-meal-value"] . " " . $_POST["res-event"] . " " . $_POST["res-athletes-value"];
+    } else {
+        session_start();
+        $_SESSION["mealscanmode"] = $mealType;
+    }
+
 
     header("location: ../index.php");
     exit();
@@ -86,6 +93,13 @@ if (isset($_POST["scan-meal"])) {
     $date = date("m-d-Y");
     $time = date("h:iA");
 
+    $pattern = "/[^0-9]/";
+    $replacement = "";
+    $scan = preg_replace($pattern, $replacement, $scan);
+
+    session_start();
+    $mType = $_SESSION["mealscanmode"];
+
     $updateStatus = "UPDATE personnel SET meal = CASE meal WHEN 1 THEN 0 ELSE 1 END WHERE person_id = '$scan'";
 
     if (mysqli_query($conn, $updateStatus)) {
@@ -100,7 +114,7 @@ if (isset($_POST["scan-meal"])) {
                 // console.log('" . $time . "')
                 // </script>";
 
-                $mealLog = "INSERT INTO meal_log (person_id, meal_type, meal_date, meal_time) VALUES ('$scan', 'Breakfast', '$date', '$time')";
+                $mealLog = "INSERT INTO meal_log (person_id, meal_type, meal_date, meal_time) VALUES ('$scan', $mType, '$date', '$time')";
 
                 if (mysqli_query($conn, $mealLog)) {
                     echo 'Success';

@@ -1,8 +1,9 @@
 <div class="modal2 opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center">
     <div class="modal2-overlay2 absolute w-full h-full bg-gray-900 opacity-50"></div>
 
-    <div class="modal2-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
-        <div class="modal-content py-4 text-left px-6 bg-gray-100">
+    <div class="modal2-container bg-white w-full md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+
+        <div class="modal-content py-4 text-left px-3 bg-gray-100">
             <!--Title-->
             <div class="w-full flex justify-center w-full space-x-2 items-center pb-3">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" viewBox="0 0 448 512">
@@ -10,101 +11,110 @@
                 </svg>
                 <p class="text-2xl font-extrabold">SCAN MEALS</p>
             </div>
-
-            <!--Body-->
-            <div class="bg-white w-full mt-2 flex justify-center space-x-1 p-4 rounded-lg border shadow-inner drop-shadow">
-                <div id="meal-choice" class="w-full mr-2">
-                    <p class="font-bold text-lg">Meal Type</p>
-                    <div class="w-full flex flex-col mt-3 space-y-2">
-                        <div class="w-full flex items-center space-x-2 px-8 border border-gray-500 rounded bg-gray-200 hover:bg-gray-300" onclick="enableReservation()">
-                            <input checked id="meal-breakfast" type="radio" value="breakfast" name="meal-type" class="w-4 h-4">
-                            <label for="meal-breakfast" class="w-full py-3 text-sm font-semibold text-gray-900 dark:text-gray-300">Breakfast</label>
-                        </div>
-                        <div class="w-full flex items-center space-x-2 px-8 border border-gray-500 rounded bg-gray-200 hover:bg-gray-300" onclick="enableReservation()">
-                            <input id="meal-snack1" type="radio" value="snack1" name="meal-type" class="w-4 h-4">
-                            <label for="meal-snack1" class="w-full py-3 text-sm font-semibold text-gray-900 dark:text-gray-300">AM Snack</label>
-                        </div>
-                        <div class="w-full flex items-center space-x-2 px-8 border border-gray-500 rounded bg-gray-200 hover:bg-gray-300" onclick="enableReservation()">
-                            <input id="meal-lunch" type="radio" value="lunch" name="meal-type" class="w-4 h-4">
-                            <label for="meal-lunch" class="w-full py-3 text-sm font-semibold text-gray-900 dark:text-gray-300">Lunch</label>
-                        </div>
-                        <div class="w-full flex items-center space-x-2 px-8 border border-gray-500 rounded bg-gray-200 hover:bg-gray-300" onclick="enableReservation()">
-                            <input id="meal-snack2" type="radio" value="snack2" name="meal-type" class="w-4 h-4">
-                            <label for="meal-snack2" class="w-full py-3 text-sm font-semibold text-gray-900 dark:text-gray-300">PM Snack</label>
-                        </div>
-                        <div class="w-full flex items-center space-x-2 px-8 border border-gray-500 rounded bg-gray-200 hover:bg-gray-300" onclick="enableReservation()">
-                            <input id="meal-dinner" type="radio" value="dinner" name="meal-type" class="w-4 h-4">
-                            <label for="meal-dinner" class="w-full py-3 text-sm font-semibold text-gray-900 dark:text-gray-300">Dinner</label>
-                        </div>
-                        <div class="w-full flex items-center space-x-2 px-8 border border-gray-500 rounded bg-gray-200 hover:bg-gray-300" onclick="enableReservation()">
-                            <input id="meal-reserve" type="radio" value="reserve" name="meal-type" class="w-4 h-4">
-                            <label for="meal-reserve" class="w-full py-3 text-sm font-semibold text-gray-900 dark:text-gray-300">Reservation</label>
+            <form method="POST" action="./Components/scan.inc.php">
+                <!--Body-->
+                <div class="bg-white w-full mt-2 flex justify-center space-x-1 p-4 rounded-lg border shadow-inner drop-shadow">
+                    <div id="meal-choice" class="w-full mr-2">
+                        <p class="font-bold text-lg">Meal Type</p>
+                        <div class="w-full flex flex-col mt-3 space-y-2">
+                            <div class="w-full flex items-center space-x-2 px-8 rounded bg-blue-100 hover:bg-blue-300" onclick="enableReservation()">
+                                <input checked id="meal-breakfast" type="radio" value="1" name="meal-type" class="w-4 h-4">
+                                <label for="meal-breakfast" class="w-full py-3 text-sm font-semibold text-gray-900 dark:text-gray-300">Breakfast</label>
+                            </div>
+                            <div class="w-full flex items-center space-x-2 px-8 rounded bg-red-100 hover:bg-red-300" onclick="enableReservation()">
+                                <input id="meal-snack1" type="radio" value="2" name="meal-type" class="w-4 h-4">
+                                <label for="meal-snack1" class="w-full py-3 text-sm font-semibold text-gray-900 dark:text-gray-300">AM Snack</label>
+                            </div>
+                            <div class="w-full flex items-center space-x-2 px-8 rounded bg-green-100 hover:bg-green-300" onclick="enableReservation()">
+                                <input id="meal-lunch" type="radio" value="3" name="meal-type" class="w-4 h-4">
+                                <label for="meal-lunch" class="w-full py-3 text-sm font-semibold text-gray-900 dark:text-gray-300">Lunch</label>
+                            </div>
+                            <div class="w-full flex items-center space-x-2 px-8 rounded bg-indigo-100 hover:bg-indigo-300" onclick="enableReservation()">
+                                <input id="meal-snack2" type="radio" value="4" name="meal-type" class="w-4 h-4">
+                                <label for="meal-snack2" class="w-full py-3 text-sm font-semibold text-gray-900 dark:text-gray-300">PM Snack</label>
+                            </div>
+                            <div class="w-full flex items-center space-x-2 px-8 rounded bg-yellow-100 hover:bg-yellow-200" onclick="enableReservation()">
+                                <input id="meal-dinner" type="radio" value="5" name="meal-type" class="w-4 h-4">
+                                <label for="meal-dinner" class="w-full py-3 text-sm font-semibold text-gray-900 dark:text-gray-300">Dinner</label>
+                            </div>
+                            <div class="w-full flex items-center space-x-2 px-8 rounded bg-gray-200 hover:bg-gray-300" onclick="enableReservation()">
+                                <input id="meal-reserve" type="radio" value="6" name="meal-type" class="w-4 h-4">
+                                <label for="meal-reserve" class="w-full py-3 text-sm font-semibold text-gray-900 dark:text-gray-300">Reservation</label>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div id="reserve-settings" class="hidden">
-                    <p class="font-bold text-lg">Reservation</p>
-                    <div class="mt-2">
-
-
-
-                        <!-- DATE -->
+                    <div id="reserve-settings" class="hidden">
+                        <p class="font-bold text-lg">Reservation</p>
                         <div class="mt-2">
-                            <p class="font-semibold text-sm">Reserve Date</p>
-                            <input id="res-date" class="mt-1 w-full border-2 border-gray rounded text-center" disabled type="date">
-                        </div>
+                            <!-- DATE -->
+                            <div class="mt-2">
+                                <p class="mb-1 font-semibold text-sm">Reserve Date</p>
+                                <input id="res-date" name="res-date" class="py-1 w-full border-2 border-gray rounded text-center" type="date" disabled>
+                            </div>
 
-                        <!-- MEAL TYPES -->
-                        <div class="mt-3">
-                            <h3 class="mb-1 text-sm font-semibold text-gray-900 dark:text-white">Meal Type</h3>
-                            <ul class="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                                <li class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
-                                    <div class="flex items-center pl-3">
-                                        <input id="breakfast-res" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
-                                        <label for="breakfast-res" class="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Breakfast</label>
-                                    </div>
-                                </li>
-                                <li class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
-                                    <div class="flex items-center pl-3">
-                                        <input id="snack1-res" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
-                                        <label for="snack1-res" class="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">AM Snack</label>
-                                    </div>
-                                </li>
-                                <li class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
-                                    <div class="flex items-center pl-3">
-                                        <input id="lunch-res" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
-                                        <label for="lunch-res" class="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Lunch</label>
-                                    </div>
-                                </li>
-                                <li class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
-                                    <div class="flex items-center pl-3">
-                                        <input id="snack2-res" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
-                                        <label for="snack2-res" class="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">PM Snack</label>
-                                    </div>
-                                </li>
-                                <li class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
-                                    <div class="flex items-center pl-3">
-                                        <input id="dinner-res" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
-                                        <label for="dinner-res" class="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Dinner</label>
-                                    </div>
-                                </li>
-                            </ul>
+                            <!-- MEAL TYPES -->
+                            <div class="mt-4">
+                                <h3 class="mb-1 text-sm font-semibold">Meal Type(s)</h3>
+                                <div>
+                                    <select id="res-meal" class="w-full" data-te-select-init multiple disabled>
+                                        <option value="1">Breakfast</option>
+                                        <option value="2">AM Snack</option>
+                                        <option value="3">Lunch</option>
+                                        <option value="4">PM Snack</option>
+                                        <option value="5">Dinner</option>
+                                    </select>
+                                </div>
+                                <input hidden id="res-meal-value" name="res-meal-value" type="text">
+                            </div>
+
+                            <!-- EVENT -->
+                            <div class="mt-4">
+                                <h3 class="mb-1 text-sm font-semibold">Select Event</h3>
+                                <div>
+                                    <select id="res-event" name="res-event" class="w-full" data-te-select-init data-te-select-filter="true" disabled>
+                                        <?php
+                                        include './dbh.inc.php';
+                                        $sql = "SELECT * FROM event";
+                                        $result = $conn->query($sql);
+
+                                        if ($result->num_rows > 0) {
+                                            while ($row = $result->fetch_assoc()) {
+                                                echo '<option value="' . $row["event_id"] . '">' . ucwords($row["event_name"]) . '</option>';
+                                            }
+                                        }
+
+                                        $conn->close();
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- ATHLETES -->
+                            <div class="mt-4">
+                                <h3 class="mb-1 text-sm font-semibold">Select Athletes</h3>
+                                <div id="div-athletes">
+                                    <select id="res-athletes" name="res-athletes" class="w-full" data-te-select-init multiple disabled>
+                                        <option value="1">John Doe</option>
+                                        <option value="2">Jonathan Joyohoy</option>
+                                        <option value="3">Brabagul Benilato</option>
+                                        <option value="4">Uzumaki Naruto</option>
+                                        <option value="5">Clark Kent</option>
+                                    </select>
+                                </div>
+                                <input hidden id="res-athletes-value" name="res-athletes-value" type="text">
+                            </div>
+
                         </div>
                     </div>
                 </div>
 
-            </div>
-
-            <div class="flex justify-center pt-4">
-                <form method="POST" action="./Components/scan.inc.php">
+                <div class="flex justify-center pt-4">
                     <button id="btn-qr-meal" name="startmealscan" title="QR Scanning Mode" class="modal2-close px-16 bg-green-500 p-3 rounded-lg text-white shadow font-semibold hover:bg-green-400" onclick="enableMealScan()">
                         Start Scan
                     </button>
-                </form>
-            </div>
-
-
+                </div>
+            </form>
         </div>
 
     </div>
@@ -140,29 +150,45 @@
         modal2.classList.toggle('opacity-0')
         modal2.classList.toggle('pointer-events-none')
         body.classList.toggle('modal2-active')
+        enableReservation();
+    }
+
+    function clearNow() {
+        document.getElementById("meal-breakfast").checked = true;
+        enableReservation();
     }
 
     function enableReservation() {
         var mealChoice = document.getElementById("meal-choice");
         var reserve = document.getElementById("reserve-settings");
-
         var reserveRadio = document.getElementById("meal-reserve");
 
         if (reserveRadio.checked) {
             mealChoice.className = "w-auto mr-2 pr-2 border-r-2";
             reserve.classList = "w-7/12";
-            document.getElementById("res-date").disabled = false
+            document.getElementById("res-date").disabled = false;
+            document.getElementById("res-meal").disabled = false;
+            document.getElementById("res-event").disabled = false;
+            document.getElementById("res-athletes").disabled = false;
+
         } else {
             mealChoice.className = "w-full mr-2";
             reserve.classList = "hidden";
             document.getElementById("res-date").value = "";
-
-            var c = document.getElementsByTagName('input');
-            for (var i = 0; i < c.length; i++) {
-                if (c[i].type == 'checkbox') {
-                    c[i].checked = false;
-                }
-            }
+            document.getElementById("res-date").disabled = true;
+            document.getElementById("res-meal").disabled = true;
+            document.getElementById("res-event").disabled = true;
+            document.getElementById("res-athletes").disabled = true;
         }
     }
+
+    const resMeal = document.getElementById('res-meal');
+    resMeal.addEventListener('valueChange.te.select', (e) => {
+        document.getElementById("res-meal-value").value = e.value;
+    });
+
+    const resAth = document.getElementById('res-athletes');
+    resAth.addEventListener('valueChange.te.select', (e) => {
+        document.getElementById("res-athletes-value").value = e.value;
+    });
 </script>
