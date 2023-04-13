@@ -12,85 +12,52 @@
 
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
 
+    <style>
+        h1 {
+            color: Green;
+        }
+
+        div.scroll {
+            margin: 4px, 4px;
+            padding: 4px;
+            background-color: #08c708;
+            width: 400px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            white-space: nowrap;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="bg-gray-300 h-1/2 w-1/2">
-
-        <div id="carouselExampleCaptions" class="relative" data-te-carousel-init data-te-carousel-slide>
-            <div class="absolute right-0 bottom-0 left-0 z-[2] mx-[15%] mb-4 flex list-none justify-center p-0" data-te-carousel-indicators>
-                <button type="button" data-te-target="#carouselExampleCaptions" data-te-slide-to="0" data-te-carousel-active class="mx-[3px] box-content h-[3px] w-[30px] flex-initial cursor-pointer border-0 border-y-[10px] border-solid border-transparent bg-white bg-clip-padding p-0 -indent-[999px] opacity-50 transition-opacity duration-[600ms] ease-[cubic-bezier(0.25,0.1,0.25,1.0)] motion-reduce:transition-none" aria-current="true" aria-label="Slide 1"></button>
-                <button type="button" data-te-target="#carouselExampleCaptions" data-te-slide-to="1" class="mx-[3px] box-content h-[3px] w-[30px] flex-initial cursor-pointer border-0 border-y-[10px] border-solid border-transparent bg-white bg-clip-padding p-0 -indent-[999px] opacity-50 transition-opacity duration-[600ms] ease-[cubic-bezier(0.25,0.1,0.25,1.0)] motion-reduce:transition-none" aria-label="Slide 2"></button>
-                <button type="button" data-te-target="#carouselExampleCaptions" data-te-slide-to="2" class="mx-[3px] box-content h-[3px] w-[30px] flex-initial cursor-pointer border-0 border-y-[10px] border-solid border-transparent bg-white bg-clip-padding p-0 -indent-[999px] opacity-50 transition-opacity duration-[600ms] ease-[cubic-bezier(0.25,0.1,0.25,1.0)] motion-reduce:transition-none" aria-label="Slide 3"></button>
-            </div>
-            <div class="relative w-full overflow-hidden after:clear-both after:block after:content-['']">
-                <div class="relative float-left -mr-[100%] w-full transition-transform duration-[600ms] ease-in-out motion-reduce:transition-none" data-te-carousel-active data-te-carousel-item style="backface-visibility: hidden">
-                    <img src="https://tecdn.b-cdn.net/img/Photos/Slides/img%20(15).jpg" class="block w-full" alt="..." />
-                    <div class="absolute inset-x-[15%] bottom-5 hidden py-5 text-center text-white md:block">
-                        <h5 class="text-xl">First slide label</h5>
-                        <p>
-                            Some representative placeholder content for the first slide.
-                        </p>
-                    </div>
-                </div>
-                <div class="relative float-left -mr-[100%] hidden w-full transition-transform duration-[600ms] ease-in-out motion-reduce:transition-none" data-te-carousel-item style="backface-visibility: hidden">
-                    <img src="https://tecdn.b-cdn.net/img/Photos/Slides/img%20(22).jpg" class="block w-full" alt="..." />
-                    <div class="absolute inset-x-[15%] bottom-5 hidden py-5 text-center text-white md:block">
-                        <h5 class="text-xl">Second slide label</h5>
-                        <p>
-                            Some representative placeholder content for the second slide.
-                        </p>
-                    </div>
-                </div>
-                <div class="relative float-left -mr-[100%] hidden w-full transition-transform duration-[600ms] ease-in-out motion-reduce:transition-none" data-te-carousel-item style="backface-visibility: hidden">
-                    <img src="https://tecdn.b-cdn.net/img/Photos/Slides/img%20(23).jpg" class="block w-full" alt="..." />
-                    <div class="absolute inset-x-[15%] bottom-5 hidden py-5 text-center text-white md:block">
-                        <h5 class="text-xl">Third slide label</h5>
-                        <p>
-                            Some representative placeholder content for the third slide.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <button class="absolute top-0 bottom-0 left-0 z-[1] flex w-[15%] items-center justify-center border-0 bg-none p-0 text-center text-white opacity-50 transition-opacity duration-150 ease-[cubic-bezier(0.25,0.1,0.25,1.0)] hover:text-white hover:no-underline hover:opacity-90 hover:outline-none focus:text-white focus:no-underline focus:opacity-90 focus:outline-none motion-reduce:transition-none" type="button" data-te-target="#carouselExampleCaptions" data-te-slide="prev">
-                <span class="inline-block h-8 w-8">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-                    </svg>
-                </span>
-                <span class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Previous</span>
-            </button>
-            <button class="absolute top-0 bottom-0 right-0 z-[1] flex w-[15%] items-center justify-center border-0 bg-none p-0 text-center text-white opacity-50 transition-opacity duration-150 ease-[cubic-bezier(0.25,0.1,0.25,1.0)] hover:text-white hover:no-underline hover:opacity-90 hover:outline-none focus:text-white focus:no-underline focus:opacity-90 focus:outline-none motion-reduce:transition-none" type="button" data-te-target="#carouselExampleCaptions" data-te-slide="next">
-                <span class="inline-block h-8 w-8">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                    </svg>
-                </span>
-                <span class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Next</span>
-            </button>
+    <<center>
+        <h1>GeeksforGeeks</h1>
+        <h2>
+            Making a div horizontally
+            scrollable using CSS
+        </h2>
+        <div class="scroll">
+            It is a good platform to learn programming.
+            It is an educational website. Prepare for the
+            Recruitment drive of product based companies
+            like Microsoft, Amazon, Adobe etc with a free
+            online placement preparation course. The course
+            focuses on various MCQ's & Coding question likely
+            to be asked in the interviews & make your upcoming
+            placement season efficient and successful. Also,
+            any geeks can help other geeks by writing articles
+            on the GeeksforGeeks, publishing articles follow few
+            steps that are Articles that need little modification
+            or improvement from reviewers are published first.
+            To quickly get your articles reviewed, please refer
+            existing articles, their formatting style, coding style,
+            and try to make you are close to them. In case you are a
+            beginner, you may refer Guidelines to write an Article
         </div>
-    </div>
-
-    <button class="p-10 bg-red-300" onclick="createParagraph()">Create Paragraph</button>
-    <div id="myDiv">This is my div.</div>
+        </center>
 
 
-    <script src="./node_modules/tw-elements/dist/js/index.min.js"></script>
-    <script>
-        function createParagraph() {
-            var myDiv = document.getElementById("myDiv"); // Get the <div> element
-            myDiv.innerHTML = `
-            <div>
-                <select>
-                    <option value="1">John Doe</option>
-                    <option value="2">Jonathan Joyohoy</option>
-                    <option value="3">Brabagul Benilato</option>
-                    <option value="4">Uzumaki Naruto</option>
-                    <option value="5">Clark Kent</option>
-                </select>
-            </div>`;
-        }
-    </script>
+        <script src="./node_modules/tw-elements/dist/js/index.min.js"></script>
 </body>
 
 </html>

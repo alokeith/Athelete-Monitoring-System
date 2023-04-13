@@ -40,10 +40,6 @@ if (isset($_POST["scan"])) {
             while ($row = $result->fetch_assoc()) {
                 $person_status = $row["person_status"];
 
-                // echo "<script>
-                // console.log('" . $time . "')
-                // </script>";
-
                 $inOutLog = "INSERT INTO log (log_date, log_time, log_status, person_id) VALUES ('$date', '$time', $person_status, '$scan')";
 
                 if (mysqli_query($conn, $inOutLog)) {
@@ -63,17 +59,36 @@ if (isset($_POST["scan"])) {
 if (isset($_POST["startmealscan"])) {
     require_once '../dbh.inc.php';
 
-
     $mealType = $_POST["meal-type"];
 
-    if ($mealType == "reserve") {
-        echo $_POST["meal-type"] . " " . $_POST["res-date"] . " " . $_POST["res-meal-value"] . " " . $_POST["res-event"] . " " . $_POST["res-athletes-value"];
+    if ($mealType == 6) {
+        $mealLog = 'INSERT INTO meal_reserve (event_id, meal_types, reserv_date, reserv_ath) VALUES (' . $_POST["res-event"] . ', "' . $_POST["res-meal-value"] . '", "' . $_POST["res-date"] . '", "' . $_POST["res-athletes-value"] . '")';
+
+        if ($_POST["res-event"] == "" || $_POST["res-meal-value"] == "" || $_POST["res-date"] == "" || $_POST["res-athletes-value"] == "") {
+            echo "
+            <script>
+                alert('Error. Please fill up all inputs for reserving.')
+                window.location.href = '../index.php';
+            </script>";
+        } else {
+            if (mysqli_query($conn, $mealLog)) {
+                echo "
+                    <script>
+                        alert('Successfully reserved meal.')
+                        window.location.href = '../index.php';
+                    </script>";
+            } else {
+                echo "
+                    <script>
+                        alert('Error. Something went wrong in reserving meal.')
+                        window.location.href = '../index.php';
+                    </script>";
+            }
+        }
     } else {
         session_start();
         $_SESSION["mealscanmode"] = $mealType;
     }
-
-
     header("location: ../index.php");
     exit();
 }
@@ -100,32 +115,41 @@ if (isset($_POST["scan-meal"])) {
     session_start();
     $mType = $_SESSION["mealscanmode"];
 
-    $updateStatus = "UPDATE personnel SET meal = CASE meal WHEN 1 THEN 0 ELSE 1 END WHERE person_id = '$scan'";
+    $selectSQL = "SELECT * FROM personnel WHERE person_id = '$scan'";
+    $result = $conn->query($selectSQL);
 
-    if (mysqli_query($conn, $updateStatus)) {
-        $selectSQL = "SELECT * FROM personnel WHERE person_id = '$scan'";
-        $result = $conn->query($selectSQL);
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $meal = $row["meal"];
 
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $meal = $row["meal"];
+            if ($meal == "1") {
+                echo "
+                    <script>
+                        alert('This person has already scanned his meal.')
+                        window.location.href = '../index.php';
+                    </script>";
+            } else {
+                $updateStatus = "UPDATE personnel SET meal = 1 WHERE person_id = '$scan'";
+                if (mysqli_query($conn, $updateStatus)) {
+                    $mealLog = "INSERT INTO meal_log (person_id, meal_type, meal_date, meal_time) VALUES ('$scan', $mType, '$date', '$time')";
 
-                // echo "<script>
-                // console.log('" . $time . "')
-                // </script>";
-
-                $mealLog = "INSERT INTO meal_log (person_id, meal_type, meal_date, meal_time) VALUES ('$scan', $mType, '$date', '$time')";
-
-                if (mysqli_query($conn, $mealLog)) {
-                    echo 'Success';
+                    if (mysqli_query($conn, $mealLog)) {
+                        echo "
+                        Success
+                            <script>
+                                window.location.href = '../index.php?id=" . $scan . "';
+                            </script>";
+                    } else {
+                        echo "
+                        Fail
+                            <script>
+                                window.location.href = '../index.php?id=" . $scan . "';
+                            </script>";
+                    }
                 } else {
-                    echo 'Fail';
+                    echo "<script>alert('Status Update Failed')</script>";
                 }
             }
         }
-    } else {
-        echo "<script>alert('Status Update Failed')</script>";
     }
-    header("location: ../index.php?id=" . $scan);
-    exit();
 }

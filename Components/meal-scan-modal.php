@@ -72,7 +72,8 @@
                             <div class="mt-4">
                                 <h3 class="mb-1 text-sm font-semibold">Select Event</h3>
                                 <div>
-                                    <select id="res-event" name="res-event" class="w-full" data-te-select-init data-te-select-filter="true" disabled>
+                                    <select id="res-event" name="res-event" class="w-full" data-te-select-init data-te-select-filter="true">
+                                        <option value="" hidden selected></option>
                                         <?php
                                         include './dbh.inc.php';
                                         $sql = "SELECT * FROM event";
@@ -80,9 +81,10 @@
 
                                         if ($result->num_rows > 0) {
                                             while ($row = $result->fetch_assoc()) {
-                                                echo '<option value="' . $row["event_id"] . '">' . ucwords($row["event_name"]) . '</option>';
+                                                echo '<option value="' . $row["event_id"] . '")">' . ucwords($row["event_name"]) . '</option>';
                                             }
                                         }
+
 
                                         $conn->close();
                                         ?>
@@ -95,11 +97,7 @@
                                 <h3 class="mb-1 text-sm font-semibold">Select Athletes</h3>
                                 <div id="div-athletes">
                                     <select id="res-athletes" name="res-athletes" class="w-full" data-te-select-init multiple disabled>
-                                        <option value="1">John Doe</option>
-                                        <option value="2">Jonathan Joyohoy</option>
-                                        <option value="3">Brabagul Benilato</option>
-                                        <option value="4">Uzumaki Naruto</option>
-                                        <option value="5">Clark Kent</option>
+                                        <option value="">Null</option>
                                     </select>
                                 </div>
                                 <input hidden id="res-athletes-value" name="res-athletes-value" type="text">
@@ -121,6 +119,8 @@
 </div>
 </div>
 
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script type="text/javscript" src="./JS/jquery.form.min.js"></script>
 
 <script>
     const overlay2 = document.querySelector('.modal2-overlay2')
@@ -185,6 +185,28 @@
     const resMeal = document.getElementById('res-meal');
     resMeal.addEventListener('valueChange.te.select', (e) => {
         document.getElementById("res-meal-value").value = e.value;
+    });
+
+    const resEvent = document.getElementById('res-event');
+    resEvent.addEventListener('valueChange.te.select', (e) => {
+        var opt = $("#res-athletes");
+        $.ajax({
+            type: 'POST',
+            url: './Components/parser.php',
+            data: 'event_id=' + e.value,
+            dataType: 'JSON',
+            beforeSend: function() {
+                opt.html("Error 1");
+            },
+            error: function(jqXHR, status, err) {
+                opt.html("There's a problem parsing your request! Please seek assistance.");
+                //$('#add-training-stat').html("<div class='alert alert-danger' role='alert'><b class='text-danger'>Error 101 occured! Please consult the ICT.</b></div>");
+            },
+            success: function(data) {
+                opt.html(data.person);
+            }
+        });
+        return false;
     });
 
     const resAth = document.getElementById('res-athletes');

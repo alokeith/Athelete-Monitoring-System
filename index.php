@@ -252,7 +252,7 @@ $conn->close();
                         <h1 class="float-left text-6xl text-center"><?php echo $person_inside ?></h1>
                     </div>
                 </div>
-                <div class="h-full overflow-x-hidden mt-2 mr-1 scroll-style pb-28 short-scroll">
+                <div class="h-full overflow-x-hidden mt-2 mr-1 scroll-style pb-28">
                     <?php
                     include './dbh.inc.php';
                     $sql = "SELECT DISTINCT event.event_id, event.event_name FROM personnel INNER JOIN event ON personnel.event_id = event.event_id WHERE personnel.person_status = 1 ORDER BY event.event_name";
@@ -340,7 +340,7 @@ $conn->close();
                         <h1 class="text-6xl"><?php echo $person_outside; ?></h1>
                     </div>
                 </div>
-                <div class="h-full overflow-x-hidden mt-2 ml-1 scroll-style pb-28 short-scroll">
+                <div class="h-full overflow-x-hidden mt-2 ml-1 scroll-style pb-28">
 
                     <?php
                     include './dbh.inc.php';
@@ -720,6 +720,7 @@ $conn->close();
     }
     include './Components/person-info-modal.php';
     include './Components/meal-scan-modal.php';
+    include './Components/reserve-modal.php';
     ?>
 
     <script src="./node_modules/tw-elements/dist/js/index.min.js"></script>
