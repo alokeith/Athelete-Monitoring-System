@@ -43,7 +43,7 @@ $resofficial = mysqli_query($conn, $sqlofficial);
 $dataofficial = mysqli_fetch_assoc($resofficial);
 $official = $dataofficial["official"];
 
-$sqlcommittee = "SELECT COUNT(*) as committee FROM personnel WHERE role_id = 6";
+$sqlcommittee = "SELECT COUNT(*) as committee FROM `personnel` WHERE role_id LIKE '6%'";
 $rescommittee = mysqli_query($conn, $sqlcommittee);
 $datacommittee = mysqli_fetch_assoc($rescommittee);
 $committee = $datacommittee["committee"];
@@ -83,7 +83,7 @@ $conn->close();
 </head>
 
 <body onload="hideBanner()">
-    <div class="bg-gray-300 drop-shadow">
+    <div id="tab-bar" class="bg-gray-300 drop-shadow">
         <ul class="flex border-b bg-gray-300 drop-shadow">
             <li class="flex-1 hover:bg-gray-200 cursor-pointer">
                 <a class="relative block p-4" onclick="changeTab('in-out')">
@@ -234,14 +234,19 @@ $conn->close();
         }
 
         document.addEventListener("keydown", function(event) {
-            if (event.key === " ") {
-                document.getElementById("btn-qr").click();
+            if (event.key === "E") {
+                // document.getElementById("btn-qr").click();
+                document.getElementById("tab-bar").classList.toggle("hidden");
+                document.getElementById("btn-qr").classList.toggle("hidden");
+                document.getElementById("div-reservation").classList.toggle("hidden");
+                document.getElementById("meal-scan-buttons").classList.toggle("hidden");
+                // document.getElementById("table-holder").classList.toggle("h-[84vh]");
             }
         });
         window.onload = hideBanner();
     </script>
 
-    <div class="h-[84vh] pb-4">
+    <div id="table-holder" class="h-[84vh] pb-4">
         <!-- IN OUT TABLE -->
         <div id="in-out-table" class="flex justify-evenly mx-2 mt-2 overflow-hidden h-full">
             <!-- INSIDE -->
@@ -449,27 +454,27 @@ $conn->close();
             include './dbh.inc.php';
             if (isset($_SESSION["scanmode"])) {
                 echo '
-                        <script>
-                            window.onload = function() {
-                                document.getElementById("qr-input").focus();
-                            };                
-                        </script>
-                        <form id="scan-form" method="POST" action="./Components/scan.inc.php"">
-                            <input id="qr-input" name="scan" class="opacity-0 fixed bg-green-300 text-center" type="text" onkeypress="scanQR(event)" onblur="keepFocus(event)" autocomplete="off">
-                        </form>
+                            <script>
+                                window.onload = function() {
+                                    document.getElementById("qr-input").focus();
+                                };                
+                            </script>
+                            <form id="scan-form" method="POST" action="./Components/scan.inc.php"">
+                                <input id="qr-input" name="scan" class="opacity-0 fixed bg-green-300 text-center" type="text" onkeypress="scanQR(event)" onblur="keepFocus(event)" autocomplete="off">
+                            </form>
 
-                        <form method="POST" action="./Components/scan.inc.php">
-                            <button id="btn-qr" name="stopscan" title="Stop Scanning Mode" class="fixed z-90 bottom-28 right-5 bg-red-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-red-700 hover:drop-shadow-2xl hover:animate-bounce duration-300" onclick="enableScan()">
-                                <svg fill="white" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 384 512">
-                                    <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/>
-                                </svg>
-                            </button>
+                            <form method="POST" action="./Components/scan.inc.php">
+                                <button id="btn-qr" name="stopscan" title="Stop Scanning Mode" class="fixed z-90 bottom-28 right-5 bg-red-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-red-700 hover:drop-shadow-2xl hover:animate-bounce duration-300" onclick="enableScan()">
+                                    <svg fill="white" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 384 512">
+                                        <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/>
+                                    </svg>
+                                </button>
 
-                            <button id="btn-add" title="Add A Personnel" class="hidden fixed z-90 bottom-6 right-4 bg-blue-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-blue-700 hover:drop-shadow-2xl hover:animate-bounce duration-300">
-                                <i id="icon-add" class="fa-solid fa-user-plus"></i>
-                            </button>
-                        </form>
-                    ';
+                                <button id="btn-add" title="Add A Personnel" class="hidden fixed z-90 bottom-6 right-4 bg-blue-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-blue-700 hover:drop-shadow-2xl hover:animate-bounce duration-300">
+                                    <i id="icon-add" class="fa-solid fa-user-plus"></i>
+                                </button>
+                            </form>
+                        ';
 
                 if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')
                     $url = "https://";
@@ -487,32 +492,32 @@ $conn->close();
                     if (isset($name["person_name"])) {
                         echo '<script>console.log("' . $name["person_name"] . '")</script>';
                         echo '
-                            <div id="scan-banner" class="z-100 fixed w-[99%] rounded flex items-center justify-center drop-shadow bg-green-500 text-white text-sm shadow-lg font-bold px-4 py-3" role="alert" onmouseenter="hideBanner2()">
-                                <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M12.432 0c1.34 0 2.01.912 2.01 1.957 0 1.305-1.164 2.512-2.679 2.512-1.269 0-2.009-.75-1.974-1.99C9.789 1.436 10.67 0 12.432 0zM8.309 20c-1.058 0-1.833-.652-1.093-3.524l1.214-5.092c.211-.814.246-1.141 0-1.141-.317 0-1.689.562-2.502 1.117l-.528-.88c2.572-2.186 5.531-3.467 6.801-3.467 1.057 0 1.233 1.273.705 3.23l-1.391 5.352c-.246.945-.141 1.271.106 1.271.317 0 1.357-.392 2.379-1.207l.6.814C12.098 19.02 9.365 20 8.309 20z"/></svg>
-                                <p><strong>' . $name["person_name"] . '</strong> was scanned.</p>
-                            </div>';
+                                <div id="scan-banner" class="z-100 fixed w-[99%] rounded flex items-center justify-center drop-shadow bg-green-500 text-white text-sm shadow-lg font-bold px-4 py-3" role="alert" onmouseenter="hideBanner2()">
+                                    <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M12.432 0c1.34 0 2.01.912 2.01 1.957 0 1.305-1.164 2.512-2.679 2.512-1.269 0-2.009-.75-1.974-1.99C9.789 1.436 10.67 0 12.432 0zM8.309 20c-1.058 0-1.833-.652-1.093-3.524l1.214-5.092c.211-.814.246-1.141 0-1.141-.317 0-1.689.562-2.502 1.117l-.528-.88c2.572-2.186 5.531-3.467 6.801-3.467 1.057 0 1.233 1.273.705 3.23l-1.391 5.352c-.246.945-.141 1.271.106 1.271.317 0 1.357-.392 2.379-1.207l.6.814C12.098 19.02 9.365 20 8.309 20z"/></svg>
+                                    <p><strong>' . $name["person_name"] . '</strong> was scanned.</p>
+                                </div>';
                     } else {
                         echo '
-                            <div id="scan-banner" class="z-100 fixed w-[99%] rounded flex items-center justify-center drop-shadow bg-red-500 text-white text-sm shadow-lg font-bold px-4 py-3" role="alert" onmouseenter="hideBanner2()">
-                                <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M12.432 0c1.34 0 2.01.912 2.01 1.957 0 1.305-1.164 2.512-2.679 2.512-1.269 0-2.009-.75-1.974-1.99C9.789 1.436 10.67 0 12.432 0zM8.309 20c-1.058 0-1.833-.652-1.093-3.524l1.214-5.092c.211-.814.246-1.141 0-1.141-.317 0-1.689.562-2.502 1.117l-.528-.88c2.572-2.186 5.531-3.467 6.801-3.467 1.057 0 1.233 1.273.705 3.23l-1.391 5.352c-.246.945-.141 1.271.106 1.271.317 0 1.357-.392 2.379-1.207l.6.814C12.098 19.02 9.365 20 8.309 20z"/></svg>
-                                <p><strong>Sorry, wrong ID scanned!</strong> Please try again.</p>
-                            </div>';
+                                <div id="scan-banner" class="z-100 fixed w-[99%] rounded flex items-center justify-center drop-shadow bg-red-500 text-white text-sm shadow-lg font-bold px-4 py-3" role="alert" onmouseenter="hideBanner2()">
+                                    <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M12.432 0c1.34 0 2.01.912 2.01 1.957 0 1.305-1.164 2.512-2.679 2.512-1.269 0-2.009-.75-1.974-1.99C9.789 1.436 10.67 0 12.432 0zM8.309 20c-1.058 0-1.833-.652-1.093-3.524l1.214-5.092c.211-.814.246-1.141 0-1.141-.317 0-1.689.562-2.502 1.117l-.528-.88c2.572-2.186 5.531-3.467 6.801-3.467 1.057 0 1.233 1.273.705 3.23l-1.391 5.352c-.246.945-.141 1.271.106 1.271.317 0 1.357-.392 2.379-1.207l.6.814C12.098 19.02 9.365 20 8.309 20z"/></svg>
+                                    <p><strong>Sorry, wrong ID scanned!</strong> Please try again.</p>
+                                </div>';
                     }
                 }
             } else {
                 echo '
-                                <form id="scan-form" method="POST" action="./Components/scan.inc.php"">
-                                    <input id="qr-input" name="scan" class="opacity-0 fixed bg-green-300 text-center" type="number" disabled onblur="keepFocus(event) autocomplete="off">
-                                </form>
+                                    <form id="scan-form" method="POST" action="./Components/scan.inc.php"">
+                                        <input id="qr-input" name="scan" class="opacity-0 fixed bg-green-300 text-center" type="number" disabled onblur="keepFocus(event) autocomplete="off">
+                                    </form>
 
-                                <form method="POST" action="./Components/scan.inc.php">
-                                    <button id="btn-qr" name="startscan" title="QR Scanning Mode" class="fixed z-90 bottom-28 right-4 bg-green-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-green-700 hover:drop-shadow-2xl hover:animate-bounce duration-300" onclick="enableScan()">
-                                        <svg fill="white" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 448 512">
-                                            <path d="M0 80C0 53.5 21.5 32 48 32h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V80zM64 96v64h64V96H64zM0 336c0-26.5 21.5-48 48-48h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V336zm64 16v64h64V352H64zM304 32h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H304c-26.5 0-48-21.5-48-48V80c0-26.5 21.5-48 48-48zm80 64H320v64h64V96zM256 304c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s7.2-16 16-16s16 7.2 16 16v96c0 8.8-7.2 16-16 16H368c-8.8 0-16-7.2-16-16s-7.2-16-16-16s-16 7.2-16 16v64c0 8.8-7.2 16-16 16H272c-8.8 0-16-7.2-16-16V304zM368 480a16 16 0 1 1 0-32 16 16 0 1 1 0 32zm64 0a16 16 0 1 1 0-32 16 16 0 1 1 0 32z" />
-                                        </svg>
-                                    </button>
-                                </form>
-                            ';
+                                    <form method="POST" action="./Components/scan.inc.php">
+                                        <button id="btn-qr" name="startscan" title="QR Scanning Mode" class="fixed z-90 bottom-28 right-4 bg-green-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-green-700 hover:drop-shadow-2xl hover:animate-bounce duration-300" onclick="enableScan()">
+                                            <svg fill="white" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 448 512">
+                                                <path d="M0 80C0 53.5 21.5 32 48 32h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V80zM64 96v64h64V96H64zM0 336c0-26.5 21.5-48 48-48h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V336zm64 16v64h64V352H64zM304 32h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H304c-26.5 0-48-21.5-48-48V80c0-26.5 21.5-48 48-48zm80 64H320v64h64V96zM256 304c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s7.2-16 16-16s16 7.2 16 16v96c0 8.8-7.2 16-16 16H368c-8.8 0-16-7.2-16-16s-7.2-16-16-16s-16 7.2-16 16v64c0 8.8-7.2 16-16 16H272c-8.8 0-16-7.2-16-16V304zM368 480a16 16 0 1 1 0-32 16 16 0 1 1 0 32zm64 0a16 16 0 1 1 0-32 16 16 0 1 1 0 32z" />
+                                            </svg>
+                                        </button>
+                                    </form>
+                                ';
             }
             ?>
         </div>
@@ -524,9 +529,8 @@ $conn->close();
         ?>
 
         <!-- PREFERENCES -->
-        <div id="preferences-table" class="hidden flex flex-col">
+        <div id="preferences-table" class="hidden flex flex-col overflow-x-hidden">
             <div class="w-full space-y-10 h-full overflow-x-hidden scroll-style">
-
                 <div class="w-full space-y-4 bg-orange-200 pb-4 drop-shadow-xl rounded-xl">
                     <div class="drop-shadow flex items-center justify-center space-x-2 text-gray-900 bg-orange-300 text-2xl font-bold rounded py-2">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="rgb(31 41 55)" width="40" height="40" viewBox="0 0 640 512">
@@ -551,6 +555,15 @@ $conn->close();
                                 <p>Add a Personnel</p>
                             </button>
                         </a>
+                        <a href="./Components/kitchen.php">
+                            <button type="button" class="shadow drop-shadow bg-gray-800 text-white font-bold py-3 rounded px-10 hover:bg-gray-700 flex justify-between items-center space-x-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="-ml-3" fill="white" width="30" height="30" viewBox="0 0 448 512">
+                                    <path d="M416 0C400 0 288 32 288 176V288c0 35.3 28.7 64 64 64h32V480c0 17.7 14.3 32 32 32s32-14.3 32-32V352 240 32c0-17.7-14.3-32-32-32zM64 16C64 7.8 57.9 1 49.7 .1S34.2 4.6 32.4 12.5L2.1 148.8C.7 155.1 0 161.5 0 167.9c0 45.9 35.1 83.6 80 87.7V480c0 17.7 14.3 32 32 32s32-14.3 32-32V255.6c44.9-4.1 80-41.8 80-87.7c0-6.4-.7-12.8-2.1-19.1L191.6 12.5c-1.8-8-9.3-13.3-17.4-12.4S160 7.8 160 16V150.2c0 5.4-4.4 9.8-9.8 9.8c-5.1 0-9.3-3.9-9.8-9L127.9 14.6C127.2 6.3 120.3 0 112 0s-15.2 6.3-15.9 14.6L83.7 151c-.5 5.1-4.7 9-9.8 9c-5.4 0-9.8-4.4-9.8-9.8V16zm48.3 152l-.3 0-.3 0 .3-.7 .3 .7z" />
+                                </svg>
+                                <p>Kitchen AMS</p>
+                            </button>
+                        </a>
+
                     </div>
                 </div>
 
@@ -587,7 +600,7 @@ $conn->close();
                                             <th scope="col" class="text-xl font-bold text-white px-16 py-3 hover:bg-gray-700">
                                                 NAME
                                             </th>
-                                            <th scope="col" class="text-xl font-bold text-white px-14 py-3 hover:bg-gray-700">
+                                            <th scope="col" class="text-xl font-bold text-white px-8 py-3 hover:bg-gray-700">
                                                 EVENT
                                             </th>
                                             <th scope="col" class="text-xl font-bold text-white px-4 py-3 hover:bg-gray-700">
@@ -651,10 +664,10 @@ $conn->close();
                                 <table class="w-full text-center border-r-2 bg-gray-800 rounded drop-shadow">
                                     <thead class="border-b bg-gray-800 cursor-pointer">
                                         <tr>
-                                            <th scope="col" class="text-xl font-bold text-white px-24 py-3 hover:bg-gray-700">
+                                            <th scope="col" class="text-xl font-bold text-white px-16 py-3 hover:bg-gray-700">
                                                 NAME
                                             </th>
-                                            <th scope="col" class="text-xl font-bold text-white px-14 pl-24 py-3 hover:bg-gray-700">
+                                            <th scope="col" class="text-xl font-bold text-white px-8 py-3 hover:bg-gray-700">
                                                 EVENT
                                             </th>
                                             <th scope="col" class="text-xl font-bold text-white -px-4 py-3 hover:bg-gray-700">
@@ -688,10 +701,10 @@ $conn->close();
                                                 <td class="text-sm text-gray-900 font-light px-2 py-4 whitespace-nowrap" style="text-transform: capitalize">
                                                     ' . $row["event_name"] . '
                                                 </td>
-                                                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                                <td class="text-sm text-gray-900 font-light px-4 py-4 whitespace-nowrap">
                                                     ' . $row["meal_type"] . '
                                                 </td>
-                                                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                                <td class="text-sm text-gray-900 font-light px-4 py-4 whitespace-nowrap">
                                                     ' . $row["meal_date"] . " " . $row["meal_time"] . '
                                                 </td>
                                             </tr class="bg-white border-b">
@@ -704,6 +717,12 @@ $conn->close();
                                 </table>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <div class="absolute bg-gray-800 bottom-0 flex items-center justify-center w-full h-16 -ml-2 shadow-lg overflow-x-hidden">
+                    <div class="flex items-center content-center justify-evenly mx-1 overflow-x-hidden bg-gray-800 text-white h-12 px-8 rounded-lg drop-shadow-2xl hover:bg-gray-700 cursor-default">
+                        <h1 class="text-md">- This system was developed by <strong>Keith Lagos</strong> and <strong>Engr. Milon Nama</strong> for the CVRAA2023 -</h1>
                     </div>
                 </div>
 
