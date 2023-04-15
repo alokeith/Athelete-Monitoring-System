@@ -1,11 +1,11 @@
 <?php
-$sqlMeal = "SELECT COUNT(*) as meal FROM personnel WHERE meal = 0";
+$sqlMeal = "SELECT COUNT(*) as meal FROM personnel WHERE meal = 1";
 $resMeal = mysqli_query($conn, $sqlMeal);
 $dataMeal = mysqli_fetch_assoc($resMeal);
 
 $meal = $dataMeal['meal'];
 
-$sqlNoMeal = "SELECT COUNT(*) as nomeal FROM personnel WHERE meal = 1";
+$sqlNoMeal = "SELECT COUNT(*) as nomeal FROM personnel WHERE meal = 0";
 $resNoMeal = mysqli_query($conn, $sqlNoMeal);
 $dataNoMeal = mysqli_fetch_assoc($resNoMeal);
 
@@ -13,10 +13,10 @@ $nomeal = $dataNoMeal['nomeal'];
 ?>
 
 <div id="meal-table" class="hidden">
-    <!-- ATHLETES NOT YET TAKEN MEAL -->
+    <!-- ATHLETES TAKEN MEAL -->
     <div class="w-1/2 border-r-2 border-white">
         <div class="flex h-auto justify-evenly items-center font-bold">
-            <h1 class="w-11/12 text-center text-3xl">ATHLETES NOT YET TAKEN MEAL</h1>
+            <h1 class="w-11/12 text-center text-3xl">ATHLETES TAKEN MEAL</h1>
             <div class="p-2 border-2 text-center border-black min-w-[5.6rem] w-auto bg-green-200 flex justify-center items-center">
                 <h1 class="float-left text-6xl text-center"><?php echo $meal ?></h1>
             </div>
@@ -24,7 +24,7 @@ $nomeal = $dataNoMeal['nomeal'];
         <div class="h-full overflow-x-hidden mt-2 mr-1 scroll-style pb-28">
             <?php
             include './dbh.inc.php';
-            $sql = "SELECT DISTINCT event.event_id, event.event_name FROM personnel INNER JOIN event ON personnel.event_id = event.event_id WHERE personnel.meal = 0 ORDER BY event.event_name";
+            $sql = "SELECT DISTINCT event.event_id, event.event_name FROM personnel INNER JOIN event ON personnel.event_id = event.event_id WHERE personnel.meal = 1 ORDER BY event.event_name";
             $result = $conn->query($sql);
 
 
@@ -33,7 +33,7 @@ $nomeal = $dataNoMeal['nomeal'];
                     $event_id = $row["event_id"];
                     $event_name = $row["event_name"];
 
-                    $sqlCount = "SELECT COUNT(*) as members FROM personnel WHERE event_id = $event_id AND meal = 0";
+                    $sqlCount = "SELECT COUNT(*) as members FROM personnel WHERE event_id = $event_id AND meal = 1";
                     $countQuery = mysqli_query($conn, $sqlCount);
                     $fetchQuery = mysqli_fetch_assoc($countQuery);
 
@@ -60,7 +60,7 @@ $nomeal = $dataNoMeal['nomeal'];
                                             </thead class="border-b">
                                             <tbody id="' . "nomeal" . $event_id . '" class="fadeAnim hidden">';
 
-                    $sql2 = "SELECT * FROM personnel WHERE event_id = " . $event_id . " AND meal = 0";
+                    $sql2 = "SELECT * FROM personnel WHERE event_id = " . $event_id . " AND meal = 1";
                     $result2 = $conn->query($sql2);
 
                     if ($result2->num_rows > 0) {
@@ -101,10 +101,10 @@ $nomeal = $dataNoMeal['nomeal'];
         </div>
     </div>
 
-    <!-- ATHLETES TAKEN MEAL -->
+    <!-- ATHLETES NOT YET TAKEN MEAL -->
     <div class="w-1/2 border-r-2 border-white ">
         <div class="flex h-auto justify-evenly items-center font-bold">
-            <h1 class="w-11/12 text-center text-3xl">ATHLETES TAKEN MEAL</h1>
+            <h1 class="w-11/12 text-center text-3xl">ATHLETES NOT YET TAKEN MEAL</h1>
             <div class="p-2 border-2 text-center border-black min-w-[5.6rem] w-auto bg-red-200 flex justify-center items-center">
                 <h1 class="text-6xl text-center"><?php echo $nomeal; ?></h1>
             </div>
@@ -113,7 +113,7 @@ $nomeal = $dataNoMeal['nomeal'];
 
             <?php
             include './dbh.inc.php';
-            $sql = "SELECT DISTINCT event.event_id, event.event_name FROM personnel INNER JOIN event ON personnel.event_id = event.event_id WHERE personnel.meal = 1 ORDER BY event.event_name";
+            $sql = "SELECT DISTINCT event.event_id, event.event_name FROM personnel INNER JOIN event ON personnel.event_id = event.event_id WHERE personnel.meal = 0 ORDER BY event.event_name";
             $result = $conn->query($sql);
 
 
@@ -122,7 +122,7 @@ $nomeal = $dataNoMeal['nomeal'];
                     $event_id = $row["event_id"];
                     $event_name = $row["event_name"];
 
-                    $sqlCount = "SELECT COUNT(*) as members FROM personnel WHERE event_id = $event_id AND meal = 1";
+                    $sqlCount = "SELECT COUNT(*) as members FROM personnel WHERE event_id = $event_id AND meal = 0";
                     $countQuery = mysqli_query($conn, $sqlCount);
                     $fetchQuery = mysqli_fetch_assoc($countQuery);
 
@@ -149,7 +149,7 @@ $nomeal = $dataNoMeal['nomeal'];
                                                         </thead class="border-b">
                                                         <tbody id="' . "meal" . $event_id . '" class="fadeAnim hidden">';
 
-                    $sql2 = "SELECT * FROM personnel WHERE event_id = " . $event_id . " AND meal = 1";
+                    $sql2 = "SELECT * FROM personnel WHERE event_id = " . $event_id . " AND meal = 0";
                     $result2 = $conn->query($sql2);
 
                     if ($result2->num_rows > 0) {
@@ -190,7 +190,7 @@ $nomeal = $dataNoMeal['nomeal'];
         </div>
     </div>
 
-    <div class="absolute bg-gray-800 bottom-0 w-full h-20 flex items-center justify-center space-x-2 border shadow-lg text-center overflow-y-hidden scroll-style">
+    <div id="div-reservation" class="absolute bg-gray-800 bottom-0 w-full h-20 flex items-center justify-center space-x-2 border shadow-lg text-center overflow-y-hidden scroll-style">
         <h1 class="text-white text-2xl font-bold w-2/12 mr-4">Reservations </h1>
         <div class="flex items-center w-full h-22 overflow-x-auto overflow-y-hidden scroll-style-horiz whitespace-nowrap">
             <?php
@@ -273,11 +273,20 @@ $nomeal = $dataNoMeal['nomeal'];
                 <input id="qr-meal" name="scan-meal" class="opacity-0 fixed bg-green-300 text-center" type="number" disabled onkeypress="scanQRMeal(event)" onblur="keepFocusMeal(event)" autocomplete="off">
             </form>
 
-            <button title="QR Scanning Mode" class="fixed z-90 bottom-28 right-4 bg-green-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-green-700 hover:drop-shadow-2xl hover:animate-bounce duration-300" onclick="mealModal();clearNow();">
+            <div id="meal-scan-buttons" class="flex flex-col space-y-2">
+                <button title="QR Scanning Mode" class="fixed z-90 bottom-28 right-4 bg-green-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-green-700 hover:drop-shadow-2xl hover:animate-bounce duration-300" onclick="mealModal();clearNow();">
                 <svg fill="white" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 448 512">
                     <path d="M0 80C0 53.5 21.5 32 48 32h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V80zM64 96v64h64V96H64zM0 336c0-26.5 21.5-48 48-48h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V336zm64 16v64h64V352H64zM304 32h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H304c-26.5 0-48-21.5-48-48V80c0-26.5 21.5-48 48-48zm80 64H320v64h64V96zM256 304c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s7.2-16 16-16s16 7.2 16 16v96c0 8.8-7.2 16-16 16H368c-8.8 0-16-7.2-16-16s-7.2-16-16-16s-16 7.2-16 16v64c0 8.8-7.2 16-16 16H272c-8.8 0-16-7.2-16-16V304zM368 480a16 16 0 1 1 0-32 16 16 0 1 1 0 32zm64 0a16 16 0 1 1 0-32 16 16 0 1 1 0 32z" />
                 </svg>
-            </button>
+                </button>
+                <form method="POST" action="./Components/scan.inc.php"">
+                    <button title="Finish Scanning for this Meal" name="reset-meal" class="fixed z-90 bottom-6 right-4 bg-red-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-red-700 hover:drop-shadow-2xl hover:animate-bounce duration-300">
+                        <svg fill="white" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 448 512">
+                            <path d="M0 80C0 53.5 21.5 32 48 32h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V80zM64 96v64h64V96H64zM0 336c0-26.5 21.5-48 48-48h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V336zm64 16v64h64V352H64zM304 32h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H304c-26.5 0-48-21.5-48-48V80c0-26.5 21.5-48 48-48zm80 64H320v64h64V96zM256 304c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s7.2-16 16-16s16 7.2 16 16v96c0 8.8-7.2 16-16 16H368c-8.8 0-16-7.2-16-16s-7.2-16-16-16s-16 7.2-16 16v64c0 8.8-7.2 16-16 16H272c-8.8 0-16-7.2-16-16V304zM368 480a16 16 0 1 1 0-32 16 16 0 1 1 0 32zm64 0a16 16 0 1 1 0-32 16 16 0 1 1 0 32z" />
+                        </svg>
+                    </button>
+                </form>
+            </div>
         ';
     }
     ?>

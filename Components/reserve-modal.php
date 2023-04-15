@@ -3,7 +3,7 @@
 
     <div class="modal3-container bg-white w-full md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
         <div id="receipt" class="modal-content py-4 text-left px-3 bg-gray-100">
-            <div id="reserve-body">
+            <div id="reserve-body" class="p-3">
                 <div class="w-full flex justify-center w-full space-x-2 items-center pb-3">
                     <p class="text-2xl font-extrabold">Reserve Modal</p>
                 </div>

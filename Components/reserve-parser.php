@@ -1,7 +1,6 @@
 <?php
 if (isset($_POST["reserv_id"])) {
     include '../dbh.inc.php';
-    $data = "";
     $reserveId = $_POST["reserv_id"];
     $sql = "SELECT meal_reserve.reserv_id, event.event_name, meal_reserve.meal_types, meal_reserve.reserv_date, meal_reserve.reserv_ath FROM `meal_reserve` INNER JOIN event ON meal_reserve.event_id = event.event_id WHERE reserv_id = $reserveId";
     $result = $conn->query($sql);
@@ -29,7 +28,7 @@ if (isset($_POST["reserv_id"])) {
                         $mealName[$i] = "Dinner";
                         break;
                     default:
-                        $mealName[$i] = "sayop";
+                        $mealName[$i] = "Failure";
                         break;
                 }
 
@@ -61,9 +60,9 @@ if (isset($_POST["reserv_id"])) {
                     <p class="text-lg font-semibold underline">Reservation</p>
                 </div>
 
-                <p class="font-bold text-center">' . $mealResult . '</p>
+                <p class="font-bold text-center">- ' . $mealResult . '</p>
                 <p class="text-center border-b pb-1 italic font-semibold text-md">' . $row["reserv_date"] . '</p>
-                <div class="text-center pt-2">' . $athResult . '</div>
+                <div class="text-center pt-2 shadow-md">' . $athResult . '</div>
             ';
         }
 

@@ -28,28 +28,28 @@
 .scroll-style::-webkit-scrollbar-thumb {
 	background-color: #1F2937;
 	border-radius: 5px;
-	height: 400px;
+	height: 300px;
 }
 
 
 .scroll-style-horiz::-webkit-scrollbar-track {
 	border-radius: 8px;
 	/* height: 2px; */
-	padding-top: 3px;
-	padding-bottom: 3px;
 	width: 6px;
 	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 	background-color: #F5F5F5;
 }
 
 .scroll-style-horiz::-webkit-scrollbar {
-	width: 2px;
+	height: 6px;
 	background-color: #F5F5F5;
 
 }
 
 .scroll-style-horiz::-webkit-scrollbar-thumb {
-	background-color: #1F2937;
-	/* border-radius: 5px; */
-	height: 2px;
+	background-color: #047857;
+	/* border-radius: 5px;x */
+	width: 20px;
+
+	/* height: 2px; */
 }

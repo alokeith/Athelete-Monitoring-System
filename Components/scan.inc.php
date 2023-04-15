@@ -89,7 +89,11 @@ if (isset($_POST["startmealscan"])) {
         session_start();
         $_SESSION["mealscanmode"] = $mealType;
     }
-    header("location: ../index.php");
+    // header("location: ../index.php");
+    echo "
+            <script>
+                window.location.href = '../index.php';
+            </script>";
     exit();
 }
 if (isset($_POST["stopmealscan"])) {
@@ -99,6 +103,19 @@ if (isset($_POST["stopmealscan"])) {
 
     header("location: ../index.php");
     exit();
+}
+if (isset($_POST["reset-meal"])) {
+    require_once '../dbh.inc.php';
+
+    $resetMeal = 'UPDATE personnel SET meal = 0';
+
+    if (mysqli_query($conn, $resetMeal)) {
+        echo "Success";
+    } else {
+        echo "Fail";
+    }
+
+    header("location: ../index.php");
 }
 
 if (isset($_POST["scan-meal"])) {
