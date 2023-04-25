@@ -15,49 +15,20 @@
 </head>
 
 <body>
-    <div id="container" class="flex justify-between">
-        <div class="bg-gray-400 rounded-lg p-36 py-64" on>
-            Reserve 1
-            <input type="text" class="bg-red-300" value=10>
-        </div>
-        <div class="bg-gray-400 rounded-lg p-36 py-64" on>
-            Reserve 1
-            <input type="text" class="bg-red-300" value=20>
-        </div>
-    </div>
+    <div>
+        <audio id="error-audio">
+            <source src="./Components/error.mp3" type="audio/mpeg">
+        </audio>
 
-    <p id="result"></p>
+        <button onclick="playAudio()">Play</button>
 
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
-    <script type="text/javscript" src="./JS/jquery.form.min.js"></script>
-    <script>
-        window.onload = () => {
-            var inputs, index;
-            container = document.getElementById('kitchen-res');
-            inputs = container.getElementsByTagName('input');
-            for (index = 0; index < inputs.length; ++index) {
-                var content = $("#reserve" + inputs[index].value);
-                $.ajax({
-                    type: 'POST',
-                    url: './kitchen-parser.php',
-                    data: 'reserv_id=' + inputs[index].value,
-                    dataType: 'JSON',
-                    beforeSend: function() {
-                        content.html("Error 1");
-                    },
-                    error: function(jqXHR, status, err) {
-                        content.html("There's a problem parsing your request! Please seek assistance.");
-                    },
-                    success: function(data) {
-                        content.html(data);
-                    }
-                });
-                return false;
+        <script>
+            function playAudio() {
+                var x = new Audio("./Components/error.mp3");
+                x.play();
             }
-
-            // document.getElementById("result").innerHTML = array;
-        }
-    </script>
+        </script>
+    </div>
 </body>
 
 </html>

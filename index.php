@@ -4,11 +4,16 @@ include './dbh.inc.php';
 
 session_start();
 
-$sqlIn = "SELECT COUNT(*) as inside FROM personnel WHERE person_status = 1";
+if (!isset($_SESSION["quarter"])) {
+    header("location:set-quarter.php");
+    exit();
+}
+
+$sqlIn = 'SELECT COUNT(*) as inside FROM personnel WHERE person_status = "1"';
 $resIn = mysqli_query($conn, $sqlIn);
 $dataIn = mysqli_fetch_assoc($resIn);
 
-$sqlOut = "SELECT COUNT(*) as outside FROM personnel WHERE person_status = 0";
+$sqlOut = 'SELECT COUNT(*) as outside FROM personnel WHERE person_status = "0"';
 $resOut = mysqli_query($conn, $sqlOut);
 $dataOut = mysqli_fetch_assoc($resOut);
 
@@ -136,11 +141,12 @@ $conn->close();
             var tab2 = document.getElementById("meal"),
                 table2 = document.getElementById("meal-table");
             var tab3 = document.getElementById("preferences"),
-                table1 = document.getElementById("preferences-table");
+                table3 = document.getElementById("preferences-table");
 
             var element = document.getElementById(tab);
             switch (tab) {
                 case "in-out":
+                    console.log(document.getElementById("in-out-table"))
                     document.getElementById("in-out-table").className = tabStyle;
                     document.getElementById("meal").className = "";
                     document.getElementById("meal-table").className = "hidden";
@@ -250,9 +256,9 @@ $conn->close();
         <!-- IN OUT TABLE -->
         <div id="in-out-table" class="flex justify-evenly mx-2 mt-2 overflow-hidden h-full">
             <!-- INSIDE -->
-            <div class="w-1/2 border-r-2 border-white">
+            <div class="w-5/12 border-r-2 border-white">
                 <div class="flex h-auto justify-evenly items-center font-bold">
-                    <h1 class="w-11/12 text-center text-3xl">ATHLETES INSIDE THE QUARTER</h1>
+                    <h1 class="w-11/12 text-center text-3xl">PERSONNEL INSIDE THE QUARTER</h1>
                     <div class="p-2 border-2 border-black min-w-[5.6rem] w-auto bg-green-200 flex justify-center">
                         <h1 class="float-left text-6xl text-center"><?php echo $person_inside ?></h1>
                     </div>
@@ -260,7 +266,7 @@ $conn->close();
                 <div class="h-full overflow-x-hidden mt-2 mr-1 scroll-style pb-28">
                     <?php
                     include './dbh.inc.php';
-                    $sql = "SELECT DISTINCT event.event_id, event.event_name FROM personnel INNER JOIN event ON personnel.event_id = event.event_id WHERE personnel.person_status = 1 ORDER BY event.event_name";
+                    $sql = "SELECT DISTINCT event.event_id, event.event_name, event.event_contact FROM personnel INNER JOIN event ON personnel.event_id = event.event_id WHERE personnel.person_status = 1 ORDER BY event.event_name";
                     $result = $conn->query($sql);
 
 
@@ -290,7 +296,7 @@ $conn->close();
                                                                             </div>
                                                                         </th>
                                                                         <th scope="col" class="w-4/12 text-sm font-medium text-white px-6 py-4">
-                                                                            CONTACT NO: 09123456789
+                                                                            CONTACT NO: ' . $row["event_contact"] . '
                                                                         </th>
                                                                     </tr>
                                                                 </thead class="border-b">
@@ -338,9 +344,9 @@ $conn->close();
             </div>
 
             <!-- OUTSIDE -->
-            <div class="w-1/2 border-r-2 border-white ">
+            <div class="w-5/12 border-r-2 border-white ">
                 <div class="flex h-auto justify-evenly items-center font-bold">
-                    <h1 class="w-11/12 text-center text-3xl">ATHLETES OUTSIDE THE QUARTER</h1>
+                    <h1 class="w-11/12 text-center text-3xl">PERSONNEL OUTSIDE THE QUARTER</h1>
                     <div class="p-2 border-2 text-center border-black min-w-[5.6rem] w-auto bg-red-200 flex justify-center items-center">
                         <h1 class="text-6xl"><?php echo $person_outside; ?></h1>
                     </div>
@@ -349,7 +355,7 @@ $conn->close();
 
                     <?php
                     include './dbh.inc.php';
-                    $sql = "SELECT DISTINCT event.event_id, event.event_name FROM personnel INNER JOIN event ON personnel.event_id = event.event_id WHERE personnel.person_status = 0 ORDER BY event.event_name";
+                    $sql = "SELECT DISTINCT event.event_id, event.event_name, event.event_contact FROM personnel INNER JOIN event ON personnel.event_id = event.event_id WHERE personnel.person_status = 0 ORDER BY event.event_name";
                     $result = $conn->query($sql);
 
 
@@ -379,7 +385,7 @@ $conn->close();
                                                                     </div>
                                                                 </th>
                                                                 <th scope="col" class="w-4/12 text-sm font-medium text-white px-6 py-4">
-                                                                    CONTACT NO: 09123456789
+                                                                    CONTACT NO: ' . $row["event_contact"] . '
                                                                 </th>
                                                             </tr>
                                                         </thead class="border-b">
@@ -424,6 +430,57 @@ $conn->close();
 
                 </div>
             </div>
+            <div class="w-2/12 ml-1 overflow-x-auto overflow-y-hidden scroll-style-horiz whitespace-nowrap bg-gray-100 drop-shadow">
+                <h1 class="text-2xl pb-2 font-bold">Recent In-Out Logs</h1>
+                <table>
+                    <thead class="border-b bg-gray-800 cursor-pointer">
+                        <tr>
+                            <th scope="col" class="py-2 border border-white text-center text-white">
+                                Name
+                            </th>
+                            <th scope="col" class="py-2 border border-white text-center text-white">
+                                Status
+                            </th>
+                            <th scope="col" class="py-2 border border-white text-center text-white">
+                                DATE / TIME
+                            </th>
+                        </tr>
+                    </thead class="border-b">
+                    <tbody>
+                        <?php
+                        include './dbh.inc.php';
+                        $sql3 = "SELECT * FROM (SELECT log.log_id, personnel.person_name, log.log_status, log.log_date, log.log_time FROM log INNER JOIN personnel ON personnel.person_id = log.person_id ORDER BY log.log_id DESC LIMIT 10)Var1 ORDER BY log_id DESC";
+                        $result3 = $conn->query($sql3);
+
+                        if ($result3->num_rows > 0) {
+                            while ($row3 = $result3->fetch_assoc()) {
+                                $status = $row3["log_status"];
+
+                                if ($status == 0) {
+                                    echo '
+                                    <tr class="py-2 border border-white bg-orange-300">
+                                        <td>' . $row3["person_name"] . '</td>
+                                        <td class="border border-white">Logged Out</td>
+                                        <td>' . $row3["log_date"] . " " . $row3["log_time"] . '</td>
+                                    </tr>
+                                    ';
+                                } else {
+                                    echo '
+                                    <tr class="py-2 border border-white bg-green-300">
+                                        <td>' . $row3["person_name"] . '</td>
+                                        <td class="border border-white">Logged In</td>
+                                        <td>' . $row3["log_date"] . " " . $row3["log_time"] . '</td>
+                                    </tr>
+                                    ';
+                                }
+                            }
+                        }
+                        $conn->close();
+                        ?>
+
+                    </tbody>
+                </table>
+            </div>
 
 
             <div class="absolute bg-gray-800 bottom-0 flex justify-evenly items-center w-full h-20 border shadow-lg">
@@ -454,27 +511,25 @@ $conn->close();
             include './dbh.inc.php';
             if (isset($_SESSION["scanmode"])) {
                 echo '
-                            <script>
-                                window.onload = function() {
-                                    document.getElementById("qr-input").focus();
-                                };                
-                            </script>
-                            <form id="scan-form" method="POST" action="./Components/scan.inc.php"">
-                                <input id="qr-input" name="scan" class="opacity-0 fixed bg-green-300 text-center" type="text" onkeypress="scanQR(event)" onblur="keepFocus(event)" autocomplete="off">
-                            </form>
+                                    <script>
+                                        window.onload = function() {
+                                            document.getElementById("qr-input").focus();
+                                        };                
+                                    </script>
+                                    <form id="scan-form" method="POST" action="./Components/scan.inc.php"">
+                                        <input id="qr-input" name="scan" class="opacity-0 fixed bg-green-300 text-center" type="text" oninput="scanQR(event)" onblur="keepFocus(event)" autocomplete="off">
+                                    </form>
 
-                            <form method="POST" action="./Components/scan.inc.php">
-                                <button id="btn-qr" name="stopscan" title="Stop Scanning Mode" class="fixed z-90 bottom-28 right-5 bg-red-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-red-700 hover:drop-shadow-2xl hover:animate-bounce duration-300" onclick="enableScan()">
-                                    <svg fill="white" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 384 512">
-                                        <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/>
-                                    </svg>
-                                </button>
+                                    <form method="POST" action="./Components/scan.inc.php">
+                                        <button id="btn-qr" name="stopscan" title="Click to Stop Scanning Mode" class="fixed z-90 bottom-28 right-5 bg-yellow-400 w-20 h-20 px-40 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-xl font-bold drop-shadow-2xl animate-bounce duration-300 whitespace-nowrap hover:bg-red-700 hover:drop-shadow-2xl" onclick="enableScan()">
+                                            Scanning Mode Is Active
+                                        </button>
 
-                                <button id="btn-add" title="Add A Personnel" class="hidden fixed z-90 bottom-6 right-4 bg-blue-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-blue-700 hover:drop-shadow-2xl hover:animate-bounce duration-300">
-                                    <i id="icon-add" class="fa-solid fa-user-plus"></i>
-                                </button>
-                            </form>
-                        ';
+                                        <button id="btn-add" title="Add A Personnel" class="hidden fixed z-90 bottom-6 right-4 bg-blue-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-blue-700 hover:drop-shadow-2xl hover:animate-bounce duration-300">
+                                            <i id="icon-add" class="fa-solid fa-user-plus"></i>
+                                        </button>
+                                    </form>
+                                ';
 
                 if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')
                     $url = "https://";
@@ -485,17 +540,26 @@ $conn->close();
 
                 if (strpos($url, "id=") !== false) {
                     $id = $_GET['id'];
-                    $sqlName = "SELECT personnel.person_name FROM personnel WHERE person_id = '$id'";
+                    $status = $_GET['status'];
+                    $sqlName = "SELECT * FROM personnel WHERE person_id = '$id'";
                     $getName = mysqli_query($conn, $sqlName);
                     $name = mysqli_fetch_assoc($getName);
 
                     if (isset($name["person_name"])) {
-                        echo '<script>console.log("' . $name["person_name"] . '")</script>';
-                        echo '
-                                <div id="scan-banner" class="z-100 fixed w-[99%] rounded flex items-center justify-center drop-shadow bg-green-500 text-white text-sm shadow-lg font-bold px-4 py-3" role="alert" onmouseenter="hideBanner2()">
+                        // echo '<script>console.log("' . $status . '")</script>';
+                        if ($status == 0) {
+                            echo '
+                                <div id="scan-banner" class="z-100 fixed w-[99%] rounded flex items-center justify-center drop-shadow bg-orange-300 text-white text-lg shadow-lg font-bold px-4 py-5" role="alert" onmouseenter="hideBanner2()">
                                     <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M12.432 0c1.34 0 2.01.912 2.01 1.957 0 1.305-1.164 2.512-2.679 2.512-1.269 0-2.009-.75-1.974-1.99C9.789 1.436 10.67 0 12.432 0zM8.309 20c-1.058 0-1.833-.652-1.093-3.524l1.214-5.092c.211-.814.246-1.141 0-1.141-.317 0-1.689.562-2.502 1.117l-.528-.88c2.572-2.186 5.531-3.467 6.801-3.467 1.057 0 1.233 1.273.705 3.23l-1.391 5.352c-.246.945-.141 1.271.106 1.271.317 0 1.357-.392 2.379-1.207l.6.814C12.098 19.02 9.365 20 8.309 20z"/></svg>
-                                    <p><strong>' . $name["person_name"] . '</strong> was scanned.</p>
+                                    <p><strong>' . $name["person_name"] . '</strong> has Logged out.</p>
                                 </div>';
+                        } else {
+                            echo '
+                                <div id="scan-banner" class="z-100 fixed w-[99%] rounded flex items-center justify-center drop-shadow bg-green-500 text-white text-lg shadow-lg font-bold px-4 py-5" role="alert" onmouseenter="hideBanner2()">
+                                    <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M12.432 0c1.34 0 2.01.912 2.01 1.957 0 1.305-1.164 2.512-2.679 2.512-1.269 0-2.009-.75-1.974-1.99C9.789 1.436 10.67 0 12.432 0zM8.309 20c-1.058 0-1.833-.652-1.093-3.524l1.214-5.092c.211-.814.246-1.141 0-1.141-.317 0-1.689.562-2.502 1.117l-.528-.88c2.572-2.186 5.531-3.467 6.801-3.467 1.057 0 1.233 1.273.705 3.23l-1.391 5.352c-.246.945-.141 1.271.106 1.271.317 0 1.357-.392 2.379-1.207l.6.814C12.098 19.02 9.365 20 8.309 20z"/></svg>
+                                    <p><strong>' . $name["person_name"] . '</strong> has Logged in.</p>
+                                </div>';
+                        }
                     } else {
                         echo '
                                 <div id="scan-banner" class="z-100 fixed w-[99%] rounded flex items-center justify-center drop-shadow bg-red-500 text-white text-sm shadow-lg font-bold px-4 py-3" role="alert" onmouseenter="hideBanner2()">
@@ -506,18 +570,18 @@ $conn->close();
                 }
             } else {
                 echo '
-                                    <form id="scan-form" method="POST" action="./Components/scan.inc.php"">
-                                        <input id="qr-input" name="scan" class="opacity-0 fixed bg-green-300 text-center" type="number" disabled onblur="keepFocus(event) autocomplete="off">
-                                    </form>
+                            <form id="scan-form" method="POST" action="./Components/scan.inc.php"">
+                                <input id="qr-input" name="scan" class="opacity-0 fixed bg-green-300 text-center" type="number" disabled onblur="keepFocus(event) autocomplete="off">
+                            </form>
 
-                                    <form method="POST" action="./Components/scan.inc.php">
-                                        <button id="btn-qr" name="startscan" title="QR Scanning Mode" class="fixed z-90 bottom-28 right-4 bg-green-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-green-700 hover:drop-shadow-2xl hover:animate-bounce duration-300" onclick="enableScan()">
-                                            <svg fill="white" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 448 512">
-                                                <path d="M0 80C0 53.5 21.5 32 48 32h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V80zM64 96v64h64V96H64zM0 336c0-26.5 21.5-48 48-48h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V336zm64 16v64h64V352H64zM304 32h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H304c-26.5 0-48-21.5-48-48V80c0-26.5 21.5-48 48-48zm80 64H320v64h64V96zM256 304c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s7.2-16 16-16s16 7.2 16 16v96c0 8.8-7.2 16-16 16H368c-8.8 0-16-7.2-16-16s-7.2-16-16-16s-16 7.2-16 16v64c0 8.8-7.2 16-16 16H272c-8.8 0-16-7.2-16-16V304zM368 480a16 16 0 1 1 0-32 16 16 0 1 1 0 32zm64 0a16 16 0 1 1 0-32 16 16 0 1 1 0 32z" />
-                                            </svg>
-                                        </button>
-                                    </form>
-                                ';
+                            <form method="POST" action="./Components/scan.inc.php">
+                                <button id="btn-qr" name="startscan" title="QR Scanning Mode" class="fixed z-90 bottom-28 right-4 bg-green-600 w-20 h-20 rounded-full border border-black shadow-lg drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-green-700 hover:drop-shadow-2xl hover:animate-bounce duration-300" onclick="enableScan()">
+                                    <svg fill="white" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 448 512">
+                                        <path d="M0 80C0 53.5 21.5 32 48 32h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V80zM64 96v64h64V96H64zM0 336c0-26.5 21.5-48 48-48h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V336zm64 16v64h64V352H64zM304 32h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H304c-26.5 0-48-21.5-48-48V80c0-26.5 21.5-48 48-48zm80 64H320v64h64V96zM256 304c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s7.2-16 16-16s16 7.2 16 16v96c0 8.8-7.2 16-16 16H368c-8.8 0-16-7.2-16-16s-7.2-16-16-16s-16 7.2-16 16v64c0 8.8-7.2 16-16 16H272c-8.8 0-16-7.2-16-16V304zM368 480a16 16 0 1 1 0-32 16 16 0 1 1 0 32zm64 0a16 16 0 1 1 0-32 16 16 0 1 1 0 32z" />
+                                    </svg>
+                                </button>
+                            </form>
+                        ';
             }
             ?>
         </div>
@@ -561,6 +625,22 @@ $conn->close();
                                     <path d="M416 0C400 0 288 32 288 176V288c0 35.3 28.7 64 64 64h32V480c0 17.7 14.3 32 32 32s32-14.3 32-32V352 240 32c0-17.7-14.3-32-32-32zM64 16C64 7.8 57.9 1 49.7 .1S34.2 4.6 32.4 12.5L2.1 148.8C.7 155.1 0 161.5 0 167.9c0 45.9 35.1 83.6 80 87.7V480c0 17.7 14.3 32 32 32s32-14.3 32-32V255.6c44.9-4.1 80-41.8 80-87.7c0-6.4-.7-12.8-2.1-19.1L191.6 12.5c-1.8-8-9.3-13.3-17.4-12.4S160 7.8 160 16V150.2c0 5.4-4.4 9.8-9.8 9.8c-5.1 0-9.3-3.9-9.8-9L127.9 14.6C127.2 6.3 120.3 0 112 0s-15.2 6.3-15.9 14.6L83.7 151c-.5 5.1-4.7 9-9.8 9c-5.4 0-9.8-4.4-9.8-9.8V16zm48.3 152l-.3 0-.3 0 .3-.7 .3 .7z" />
                                 </svg>
                                 <p>Kitchen AMS</p>
+                            </button>
+                        </a>
+                        <a href="Components/quarter-reg">
+                            <button type="button" class="shadow drop-shadow bg-gray-800 text-white font-bold py-3 rounded px-10 hover:bg-gray-700 flex justify-between items-center space-x-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="-ml-3" fill="white" width="30" height="30" viewBox="0 0 640 512">
+                                    <path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM504 312V248H440c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V136c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H552v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z" />
+                                </svg>
+                                <p>Assign personnel to quarter</p>
+                            </button>
+                        </a>
+                        <a href="Components/report.php">
+                            <button type="button" class="shadow drop-shadow bg-gray-800 text-white font-bold py-3 rounded px-10 hover:bg-gray-700 flex justify-between items-center space-x-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="-ml-3" fill="white" width="30" height="30">
+                                    <path d="M0 96l576 0c0-35.3-28.7-64-64-64H64C28.7 32 0 60.7 0 96zm0 32V416c0 35.3 28.7 64 64 64H512c35.3 0 64-28.7 64-64V128H0zM64 405.3c0-29.5 23.9-53.3 53.3-53.3H234.7c29.5 0 53.3 23.9 53.3 53.3c0 5.9-4.8 10.7-10.7 10.7H74.7c-5.9 0-10.7-4.8-10.7-10.7zM176 192a64 64 0 1 1 0 128 64 64 0 1 1 0-128zm176 16c0-8.8 7.2-16 16-16H496c8.8 0 16 7.2 16 16s-7.2 16-16 16H368c-8.8 0-16-7.2-16-16zm0 64c0-8.8 7.2-16 16-16H496c8.8 0 16 7.2 16 16s-7.2 16-16 16H368c-8.8 0-16-7.2-16-16zm0 64c0-8.8 7.2-16 16-16H496c8.8 0 16 7.2 16 16s-7.2 16-16 16H368c-8.8 0-16-7.2-16-16z" />
+                                </svg>
+                                <p>Generate Report</p>
                             </button>
                         </a>
 
@@ -722,7 +802,7 @@ $conn->close();
 
                 <div class="absolute bg-gray-800 bottom-0 flex items-center justify-center w-full h-16 -ml-2 shadow-lg overflow-x-hidden">
                     <div class="flex items-center content-center justify-evenly mx-1 overflow-x-hidden bg-gray-800 text-white h-12 px-8 rounded-lg drop-shadow-2xl hover:bg-gray-700 cursor-default">
-                        <h1 class="text-md">- This system was developed by <strong>Keith Lagos</strong> and <strong>Engr. Milon Nama</strong> for the CVRAA2023 -</h1>
+                        <h1 class="text-md">- This system was developed by <strong>Keith Lagos</strong> and <strong>Engr. Milon Nama</strong> for the Bayawan City Schools Division CVRAA2023 -</h1>
                     </div>
                 </div>
 
@@ -733,9 +813,9 @@ $conn->close();
     <?php
     if (isset($_SESSION["mealscanmode"])) {
         echo '
-                <script>
-                    document.getElementById("meal-tab").click();
-                </script>';
+                    <script>
+                        document.getElementById("meal-tab").click();
+                    </script>';
     }
     include './Components/person-info-modal.php';
     include './Components/meal-scan-modal.php';

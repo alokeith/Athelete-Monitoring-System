@@ -3,22 +3,17 @@
 
     <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
         <div class="modal-content py-4 text-left px-6">
-            <div>
-                <img src="" alt="">
+            <div class="w-full flex justify-center">
+                <img id="person-img" class="shadow-lg border" src="" width="260" height="260" alt="TEstin">
             </div>
-            <div class="flex justify-center items-center pb-3">
+            <div class="flex justify-center items-center mt-4 pb-3">
                 <p id="person-name" class="text-2xl font-bold"></p>
             </div>
-            <!--Body-->
-            <p>Modal content can go here</p>
-            <p>...</p>
-            <p>...</p>
-            <p>...</p>
-            <p>...</p>
 
-            <!--Footer-->
-            <div class="flex justify-end pt-2">
-                <button class="modal-close px-4 bg-indigo-500 p-3 rounded-lg text-white hover:bg-indigo-400">Close</button>
+            <p class="text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Neque esse, et nihil ad corporis vero magni ratione quasi laborum aperiam quis. Officia, ex eum autem harum nisi provident excepturi veritatis!</p>
+
+            <div class="flex justify-center pt-2 mt-2">
+                <button class="modal-close px-4 bg-indigo-500 p-3 px-24 rounded-lg text-white hover:bg-indigo-400">Close</button>
             </div>
 
         </div>
@@ -57,5 +52,6 @@
         body.classList.toggle('modal-active')
 
         document.getElementById("person-name").innerHTML = name;
+        document.getElementById("person-img").src = "./Components/id-printing/pictures/" + id + ".jpg";
     }
 </script>

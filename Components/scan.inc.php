@@ -12,8 +12,8 @@ if (isset($_POST["startscan"])) {
 }
 if (isset($_POST["stopscan"])) {
     session_start();
-    session_unset();
-    session_destroy();
+    unset($_SESSION["scanmode"]);
+    //session_destroy();
 
     header("location: ../index.php");
     exit();
@@ -52,7 +52,7 @@ if (isset($_POST["scan"])) {
     } else {
         echo "<script>alert('Status Update Failed')</script>";
     }
-    header("location: ../index.php?id=" . $scan);
+    header("location: ../index.php?id=" . $scan . "&status=" . $person_status);
     exit();
 }
 
@@ -98,8 +98,8 @@ if (isset($_POST["startmealscan"])) {
 }
 if (isset($_POST["stopmealscan"])) {
     session_start();
-    session_unset();
-    session_destroy();
+    unset($_SESSION["mealscanmode"]);
+    //session_destroy();
 
     header("location: ../index.php");
     exit();
@@ -122,7 +122,7 @@ if (isset($_POST["scan-meal"])) {
     include '../dbh.inc.php';
 
     $scan = $_POST["scan-meal"];
-    $date = date("m-d-Y");
+    $date = date("Y-m-d");
     $time = date("h:iA");
 
     $pattern = "/[^0-9]/";
@@ -132,40 +132,40 @@ if (isset($_POST["scan-meal"])) {
     session_start();
     $mType = $_SESSION["mealscanmode"];
 
-    $selectSQL = "SELECT * FROM personnel WHERE person_id = '$scan'";
-    $result = $conn->query($selectSQL);
 
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $meal = $row["meal"];
+    $checkSQL = "SELECT person_id FROM personnel WHERE person_id = '$scan' LIMIT 1";
+    $check = $conn->query($checkSQL);
 
-            if ($meal == "1") {
+    if ($check->num_rows < 1) {
+        echo "
+            <script>
+                window.location.href = '../index.php?id=" . $scan . "';
+            </script>";
+    } else {
+        $selectSQL = "SELECT * FROM `meal_log` WHERE meal_type = '$mType' AND meal_date = '$date' AND person_id = '$scan'";
+        $result = $conn->query($selectSQL);
+
+        if ($result->num_rows > 0) {
+            echo "
+                <script>
+                    alert('This person has already scanned his meal.')
+                    window.location.href = '../index.php';
+                </script>";
+        } else {
+            $mealLog = "INSERT INTO meal_log (person_id, meal_type, meal_date, meal_time) VALUES ('$scan', $mType, '$date', '$time')";
+
+            if (mysqli_query($conn, $mealLog)) {
                 echo "
+                Success
                     <script>
-                        alert('This person has already scanned his meal.')
-                        window.location.href = '../index.php';
+                        window.location.href = '../index.php?id=" . $scan . "';
                     </script>";
             } else {
-                $updateStatus = "UPDATE personnel SET meal = 1 WHERE person_id = '$scan'";
-                if (mysqli_query($conn, $updateStatus)) {
-                    $mealLog = "INSERT INTO meal_log (person_id, meal_type, meal_date, meal_time) VALUES ('$scan', $mType, '$date', '$time')";
-
-                    if (mysqli_query($conn, $mealLog)) {
-                        echo "
-                        Success
-                            <script>
-                                window.location.href = '../index.php?id=" . $scan . "';
-                            </script>";
-                    } else {
-                        echo "
-                        Fail
-                            <script>
-                                window.location.href = '../index.php?id=" . $scan . "';
-                            </script>";
-                    }
-                } else {
-                    echo "<script>alert('Status Update Failed')</script>";
-                }
+                echo "
+                Fail
+                    <script>
+                        window.location.href = '../index.php?id=" . $scan . "';
+                    </script>";
             }
         }
     }

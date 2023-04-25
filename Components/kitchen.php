@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="overflow-hidden">
 
 <head>
     <meta charset="UTF-8">
@@ -18,9 +18,9 @@
         </svg>
         <h1 class="text-gray-100 text-4xl font-extrabold">KITCHEN AMS</h1>
     </div>
-    <div class="h-10/12 mx-4 mt-4 scroll-style overflow-auto">
+    <div class="h-11/12 w-full mx-4 mt-4">
         <!-- <h1 class="text-3xl font-bold">Reservations</h1> -->
-        <div id="kitchen-res" class="mt-2 flex justify-evenly space-x-4">
+        <div id="kitchen-res" class="flex items-center w-full h-full overflow-x-auto space-x-3 pr-8 overflow-y-hidden scroll-style-horiz whitespace-nowrap pb-4">
             <?php
             include '../dbh.inc.php';
             $sql = 'SELECT * FROM meal_reserve';
@@ -29,12 +29,13 @@
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
                     echo '
-                        <div class="border-2 shadow-lg px-8 py-3 bg-gray-100 rounded-lg">
+                        <div class="border-2 shadow-lg px-14 max-w-[250px] py-3 bg-gray-100 rounded-lg">
                             <form action="./claim.inc.php" method="POST">
-                                <div id="reserve' . $row["reserv_id"] . '"></div>
-                                <input name="reserv-id" hidden type="text" class="bg-red-300 hidden" value="' . $row["reserv_id"] . '">
-                                <div class="w-full flex justify-center mt-4">
-                                    <button name="claim" class="bg-green-300 rounded px-24 py-4 shadow-md hover:bg-green-200">Claim</button>
+                                <div class="px-10" id="reserve' . $row["reserv_id"] . '"></div>
+                                <input name="reserv-id" hidden type="text" class="hidden" value="' . $row["reserv_id"] . '">
+                                <div class="w-full flex justify-evenly mt-4 space-x-2">
+                                    <button name="cancel" class="bg-red-400 font-semibold rounded text-gray-900 w-1/2 py-3 shadow-md hover:bg-red-300" onclick="return  confirm(\'Confirm cancelling this reservation? Y/N\')">Cancel Reservation</button>
+                                    <button name="claim" class="bg-green-300 font-semibold rounded text-gray-900 w-1/2 py-3 shadow-md hover:bg-green-200" onclick="return  confirm(\'Confirm claiming this reservation? Y/N\')">Claim</button>
                                 </div>
                             </form>
                         </div>
@@ -93,6 +94,12 @@
 
             // document.getElementById("result").innerHTML = array;
         }
+
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "E") {
+                window.location.href = '../index.php';
+            }
+        });
     </script>
 </body>
 

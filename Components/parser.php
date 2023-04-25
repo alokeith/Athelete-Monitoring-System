@@ -10,7 +10,7 @@ if (isset($_POST["event_id"])) {
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             $name = strtolower($row["person_name"]);
-            $persons .= '<option value="' . $row["person_id"] . '">' . ucwords($name) . '</option>';
+            $persons .= '<option value="' . $row["person_id"] . '">' . utf8_encode(ucwords($name)) . '</option>';
         }
         $data["person"] = `
             <select id="res-athletes" name="res-athletes" class="w-full" data-te-select-init multiple disabled>

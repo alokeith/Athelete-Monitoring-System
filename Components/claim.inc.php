@@ -8,7 +8,7 @@ if (isset($_POST["claim"])) {
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             $mealType = $row["meal_types"];
-            $date = "R:" . $row["reserv_date"] . " C:" . date("m-d-Y");
+            $date = $row["reserv_date"];
             $time = date("h:iA");
 
             $mealAthletes = explode(",", $row["reserv_ath"]);
@@ -38,5 +38,18 @@ if (isset($_POST["claim"])) {
 
     $conn->close();
     exit();
-    // echo $reserveId;
+}
+
+if (isset($_POST["cancel"])) {
+    include '../dbh.inc.php';
+    $reserveId = $_POST["reserv-id"];
+
+    $deleteRes = "DELETE FROM `meal_reserve` WHERE reserv_id = " . $reserveId . "";
+    if (mysqli_query($conn, $deleteRes)) {
+        echo "Successfull deletion";
+    } else {
+        echo "Fail Deletion";
+    }
+
+    header("location: ./kitchen.php");
 }
